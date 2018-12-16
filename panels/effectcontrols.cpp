@@ -6,6 +6,7 @@
 #include <QResizeEvent>
 #include <QScrollBar>
 
+#include "panels/panelbase.h"
 #include "panels/panels.h"
 #include "project/effect.h"
 #include "project/clip.h"
@@ -21,13 +22,16 @@
 #include "debug.h"
 
 EffectControls::EffectControls(QWidget *parent) :
-	QDockWidget(parent),
+    PanelBase(parent),
 	multiple(false),
     zoom(1),
     ui(new Ui::EffectControls),
-    panel_name("Effects: "),
+    //panel_name("Effects: "),
     mode(TA_NO_TRANSITION)
 {
+    setTitleText("EFFECTS");
+    setStatusText("> none");
+
     ui->setupUi(this);
 
 	init_effects();
@@ -218,7 +222,8 @@ void EffectControls::clear_effects(bool clear_cache) {
 	ui->headers->setVisible(false);
 	ui->keyframeView->setEnabled(false);
     if (clear_cache) selected_clips.clear();
-    setWindowTitle(panel_name + "(none)");
+    //setWindowTitle(panel_name + "(none)");
+    setStatusText("> none");
 }
 
 void EffectControls::deselect_all_effects(QWidget* sender) {
@@ -265,8 +270,9 @@ void EffectControls::load_effects() {
             }
 		}
 		if (selected_clips.size() > 0) {
-            setWindowTitle(panel_name + sequence->clips.at(selected_clips.at(0))->name);
-			ui->verticalScrollBar->setMaximum(qMax(0, ui->effects_area->sizeHint().height() - ui->headers->height() + ui->scrollArea->horizontalScrollBar()->height()/* - ui->keyframeView->height() - ui->headers->height()*/));
+            //setWindowTitle(panel_name + sequence->clips.at(selected_clips.at(0))->name);
+            setStatusText("> " + sequence->clips.at(selected_clips.at(0))->name);
+            ui->verticalScrollBar->setMaximum(qMax(0, ui->effects_area->sizeHint().height() - ui->headers->height() + ui->scrollArea->horizontalScrollBar()->height()/* - ui->keyframeView->height() - ui->headers->height()*/));
 			ui->keyframeView->setEnabled(true);
 			ui->headers->setVisible(true);
 			ui->keyframeView->update();

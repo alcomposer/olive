@@ -2,6 +2,9 @@
 #define EFFECTCONTROLS_H
 
 #include <QDockWidget>
+
+#include "panels/panelbase.h"
+#include "panels/paneltitle.h"
 #include <QUndoCommand>
 
 struct Clip;
@@ -11,6 +14,7 @@ class TimelineHeader;
 class QScrollArea;
 class KeyframeView;
 class QVBoxLayout;
+
 
 class EffectsArea : public QWidget {
 public:
@@ -25,7 +29,7 @@ namespace Ui {
 class EffectControls;
 }
 
-class EffectControls : public QDockWidget
+class EffectControls : public PanelBase
 {
 	Q_OBJECT
 
@@ -42,6 +46,7 @@ public:
 	void delete_selected_keyframes();
     void copy(bool del);
 	bool multiple;
+    QString panel_name;
 
 	QVector<int> selected_clips;
 
@@ -68,7 +73,6 @@ private:
 
     int effect_menu_type;
     int effect_menu_subtype;
-    QString panel_name;
     int mode;
 };
 
