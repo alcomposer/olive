@@ -53,6 +53,7 @@ public:
 	double zoom;
 
 	Ui::EffectControls *ui;
+
 public slots:
     void update_keyframes();
 private slots:

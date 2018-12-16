@@ -22,13 +22,14 @@
 #include "debug.h"
 
 EffectControls::EffectControls(QWidget *parent) :
-    PanelBase(parent),
+    PanelBase(parent, "EFFECTS", ">"),
 	multiple(false),
     zoom(1),
     ui(new Ui::EffectControls),
     //panel_name("Effects: "),
     mode(TA_NO_TRANSITION)
 {
+    setWindowTitle("EFFECTS");
     setTitleText("EFFECTS");
     setStatusText("> none");
 
