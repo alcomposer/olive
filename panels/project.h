@@ -8,6 +8,9 @@
 
 #include "project/projectmodel.h"
 
+#include "panelbase.h"
+#include "paneltitle.h"
+
 struct Footage;
 struct Sequence;
 struct Clip;
@@ -40,7 +43,7 @@ Sequence* create_sequence_from_media(QVector<Media *> &media_list);
 QString get_channel_layout_name(int channels, uint64_t layout);
 QString get_interlacing_name(int interlacing);
 
-class Project : public QDockWidget
+class Project : public PanelBase
 {
 	Q_OBJECT
 

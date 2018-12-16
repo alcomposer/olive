@@ -3,10 +3,8 @@
 
 
 
-PanelBase::PanelBase(QWidget * parent, QString title, QString status):
-    QDockWidget(parent),
-    title_text(title),
-    status_text(status)
+PanelBase::PanelBase(QWidget * parent):
+    QDockWidget(parent)
 {
     parentWidget()->setWindowTitle(title_text);
     setTitleBarWidget(titleWidget = new PanelTitle(this));

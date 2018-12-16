@@ -4,6 +4,9 @@
 #include <QDockWidget>
 #include <QTimer>
 
+#include "panels/panelbase.h"
+#include "panels/paneltitle.h"
+
 class Timeline;
 class ViewerWidget;
 class Media;
@@ -17,7 +20,7 @@ bool frame_rate_is_droppable(float rate);
 long timecode_to_frame(const QString& s, int view, double frame_rate);
 QString frame_to_timecode(long f, int view, double frame_rate);
 
-class Viewer : public QDockWidget
+class Viewer : public PanelBase
 {
 	Q_OBJECT
 

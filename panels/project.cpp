@@ -53,9 +53,11 @@ QStringList recent_projects;
 QString recent_proj_file;
 
 Project::Project(QWidget *parent) :
-	QDockWidget(parent),
+    PanelBase(parent),
 	ui(new Ui::Project)
 {
+    setWindowTitle("PROJECT");
+    setTitleText("PROJECT");
     ui->setupUi(this);
     source_table = ui->treeView;
     source_table->project_parent = this;
@@ -734,6 +736,7 @@ void Project::clear() {
 }
 
 void Project::new_project() {
+    setWindowTitle("PROJECT");
 	// clear existing project
     set_sequence(NULL);
     panel_footage_viewer->set_media(NULL);

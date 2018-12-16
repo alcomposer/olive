@@ -31,7 +31,7 @@ extern "C" {
 #include <QTimer>
 
 Viewer::Viewer(QWidget *parent) :
-    QDockWidget(parent),
+    PanelBase(parent),
 	playing(false),
     just_played(false),
     media(NULL),
@@ -42,6 +42,9 @@ Viewer::Viewer(QWidget *parent) :
     panel_name("Viewer: "),
     minimum_zoom(1.0)
 {
+    setTitleText("VIEWER");
+    setStatusText("> none");
+
 	ui->setupUi(this);
 	ui->headers->viewer = this;
 	ui->headers->snapping = false;
@@ -613,12 +616,14 @@ void Viewer::set_sequence(bool main, Sequence *s) {
         ui->glViewerPane->aspect_ratio = (float) seq->width / (float) seq->height;
         ui->glViewerPane->adjust();
 
-        setWindowTitle(panel_name + seq->name);
+        setWindowTitle(getTitleText());
+        setStatusText("> " + seq->name);
     } else {
         update_playhead_timecode(0);
         update_end_timecode();
 
-        setWindowTitle(panel_name + "(none)");
+        setWindowTitle(getTitleText());
+        setStatusText("> none");
     }
 
 	update_header_zoom();

@@ -25,8 +25,8 @@ PanelTitle::PanelTitle(QDockWidget *parent):
     line->setFrameShape(QFrame::HLine);
     //line->setFrameShadow(QFrame::Sunken);
 
-    info->setText("Media Info >");
-    title->setText("test");
+    //info->setText("Media Info >");
+    //title->setText("test");
     title->setAlignment(Qt::AlignHCenter);
     layout->addWidget(title);
 

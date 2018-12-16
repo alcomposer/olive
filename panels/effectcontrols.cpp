@@ -22,7 +22,7 @@
 #include "debug.h"
 
 EffectControls::EffectControls(QWidget *parent) :
-    PanelBase(parent, "EFFECTS", ">"),
+    PanelBase(parent),
 	multiple(false),
     zoom(1),
     ui(new Ui::EffectControls),
@@ -223,7 +223,7 @@ void EffectControls::clear_effects(bool clear_cache) {
 	ui->headers->setVisible(false);
 	ui->keyframeView->setEnabled(false);
     if (clear_cache) selected_clips.clear();
-    //setWindowTitle(panel_name + "(none)");
+    setWindowTitle(getTitleText());
     setStatusText("> none");
 }
 
@@ -271,7 +271,7 @@ void EffectControls::load_effects() {
             }
 		}
 		if (selected_clips.size() > 0) {
-            //setWindowTitle(panel_name + sequence->clips.at(selected_clips.at(0))->name);
+            setWindowTitle(getTitleText());
             setStatusText("> " + sequence->clips.at(selected_clips.at(0))->name);
             ui->verticalScrollBar->setMaximum(qMax(0, ui->effects_area->sizeHint().height() - ui->headers->height() + ui->scrollArea->horizontalScrollBar()->height()/* - ui->keyframeView->height() - ui->headers->height()*/));
 			ui->keyframeView->setEnabled(true);

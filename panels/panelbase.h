@@ -17,7 +17,7 @@ class PanelBase : public QDockWidget
 {
     Q_OBJECT
 public:
-    PanelBase(QWidget *parent,QString title, QString status);
+    PanelBase(QWidget *parent);
     ~PanelBase();
     void setTitleText(QString titleText);
     void setStatusText(QString statusText);
