@@ -44,7 +44,7 @@ void draw_selection_rectangle(QPainter& painter, const QRect& rect) {
 }
 
 Timeline::Timeline(QWidget *parent) :
-	QDockWidget(parent),
+    DockWidget(parent),
     cursor_frame(0),
     cursor_track(0),
     zoom(1.0),

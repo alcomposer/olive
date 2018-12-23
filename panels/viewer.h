@@ -1,7 +1,7 @@
 #ifndef VIEWER_H
 #define VIEWER_H
 
-#include <QDockWidget>
+#include "dockwidget.h"
 #include <QTimer>
 
 class Timeline;
@@ -17,7 +17,7 @@ bool frame_rate_is_droppable(float rate);
 long timecode_to_frame(const QString& s, int view, double frame_rate);
 QString frame_to_timecode(long f, int view, double frame_rate);
 
-class Viewer : public QDockWidget
+class Viewer : public DockWidget
 {
 	Q_OBJECT
 

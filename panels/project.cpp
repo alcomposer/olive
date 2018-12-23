@@ -57,7 +57,7 @@ QStringList recent_projects;
 QString recent_proj_file;
 
 Project::Project(QWidget *parent) :
-	QDockWidget(parent)
+    DockWidget(parent)
 {
 	setObjectName("Project");
 	resize(504, 371);

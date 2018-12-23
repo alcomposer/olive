@@ -1,7 +1,7 @@
 #ifndef EFFECTCONTROLS_H
 #define EFFECTCONTROLS_H
 
-#include <QDockWidget>
+#include "dockwidget.h"
 #include <QUndoCommand>
 
 struct Clip;
@@ -25,7 +25,7 @@ namespace Ui {
 class EffectControls;
 }
 
-class EffectControls : public QDockWidget
+class EffectControls : public DockWidget
 {
 	Q_OBJECT
 

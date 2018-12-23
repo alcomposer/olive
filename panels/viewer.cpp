@@ -32,7 +32,7 @@ extern "C" {
 #include <QTimer>
 
 Viewer::Viewer(QWidget *parent) :
-    QDockWidget(parent),
+    DockWidget(parent),
 	playing(false),
     just_played(false),
     media(NULL),

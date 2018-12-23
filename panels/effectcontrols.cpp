@@ -21,7 +21,7 @@
 #include "debug.h"
 
 EffectControls::EffectControls(QWidget *parent) :
-	QDockWidget(parent),
+    DockWidget(parent),
 	multiple(false),
     zoom(1),
     ui(new Ui::EffectControls),

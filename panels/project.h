@@ -1,7 +1,7 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include <QDockWidget>
+#include "dockwidget.h"
 #include <QVector>
 #include <QTimer>
 #include <QDir>
@@ -40,7 +40,7 @@ Sequence* create_sequence_from_media(QVector<Media *> &media_list);
 QString get_channel_layout_name(int channels, uint64_t layout);
 QString get_interlacing_name(int interlacing);
 
-class Project : public QDockWidget
+class Project : public DockWidget
 {
 	Q_OBJECT
 

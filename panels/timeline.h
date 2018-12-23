@@ -4,7 +4,7 @@
 #include "ui/timelinetools.h"
 #include "project/selection.h"
 
-#include <QDockWidget>
+#include "dockwidget.h"
 #include <QVector>
 #include <QTime>
 
@@ -67,7 +67,7 @@ namespace Ui {
 class Timeline;
 }
 
-class Timeline : public QDockWidget
+class Timeline : public DockWidget
 {
 	Q_OBJECT
 public:
