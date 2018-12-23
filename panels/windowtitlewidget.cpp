@@ -4,15 +4,38 @@
 
 WindowTitleWidget::WindowTitleWidget(QDockWidget * parent):
     QTabWidget(parent),
-    title("test"),
-    tab_bar(new QTabBar(this))
+    title("this is a test"),
+    tab_bar(new QTabBar(this)),
+    parent(parent)
 {
+
     dout << "making window title";
-    addTab(tab_bar, "this");
-    setTabsClosable(true);
+
+ //   foreach(QDockWidget * panel_widget, mainWindow->panels){
+ //   connect(parent, SIGNAL(visibilityChanged(bool)), panel_widget->findChild<WindowTitleWidget*>(), SLOT(update_me(bool)));
+ //   }
+ //   connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(update_me(bool)));
+
+
+    // addTab(tab_bar, title);
+   setTabsClosable(true);
     //removeTab(0);
     //tab_bar->addTab(title);
 }
 WindowTitleWidget::~WindowTitleWidget(){
 
 }
+void WindowTitleWidget::update_me(bool hasChanged){
+    dout << "doing an update";
+  //  foreach(QDockWidget * temp, mainWindow->panels){
+    //    dout << "   working on: " << temp;
+        if (mainWindow->tabifiedDockWidgets(parent).isEmpty()){
+    //        dout << "      adding tab to: " << temp->findChild<WindowTitleWidget*>();
+     //       temp->findChild<WindowTitleWidget*>()->addTab(tab_bar, title);
+            addTab(tab_bar, title);
+        } else {
+            //temp->findChild<WindowTitleWidget*>()->removeTab(0);
+            removeTab(0);
+        }
+    }
+//}

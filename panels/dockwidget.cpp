@@ -2,9 +2,11 @@
 
 DockWidget::DockWidget(QWidget * parent) :
     QDockWidget (parent),
-    titleBar(new WindowTitleWidget(this))
+    title_bar(new WindowTitleWidget(this))
 {
-    setTitleBarWidget(titleBar);
+    mainWindow->panels.push_back(this);
+    setTitleBarWidget(title_bar);
+
 }
 
 DockWidget::~DockWidget()

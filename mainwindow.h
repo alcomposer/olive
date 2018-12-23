@@ -21,6 +21,8 @@ public:
     void updateTitle(const QString &url);
     ~MainWindow();
 
+    QVector<QDockWidget*> panels;
+
 public slots:
 	void undo();
 	void redo();

@@ -3,6 +3,7 @@
 
 #include <QDockWidget>
 #include "windowtitlewidget.h"
+#include "mainwindow.h"
 
 class DockWidget : public QDockWidget
 {
@@ -12,7 +13,7 @@ public:
     ~DockWidget();
 
 private:
-    WindowTitleWidget * titleBar;
+    WindowTitleWidget * title_bar;
 };
 
 #endif // DOCKWIDGET_H

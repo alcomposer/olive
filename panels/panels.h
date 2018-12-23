@@ -16,4 +16,6 @@ extern Timeline* panel_timeline;
 void update_ui(bool modified);
 QDockWidget* get_focused_panel();
 
+
+
 #endif // PANELS_H

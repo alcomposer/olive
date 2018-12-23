@@ -137,6 +137,16 @@ MainWindow::MainWindow(QWidget *parent) :
 	panel_effect_controls = new EffectControls(this);
     panel_timeline = new Timeline(this);
 
+    dout << "[alex] panels are: " << panels;
+
+    foreach(QDockWidget* panel_item, panels){
+        connect(panel_sequence_viewer, SIGNAL(visibilityChanged(bool)), panel_item->findChild<WindowTitleWidget*>(),SLOT(update_me(bool)));
+        connect(panel_footage_viewer, SIGNAL(visibilityChanged(bool)), panel_item->findChild<WindowTitleWidget*>(),SLOT(update_me(bool)));
+        connect(panel_project, SIGNAL(visibilityChanged(bool)), panel_item->findChild<WindowTitleWidget*>(),SLOT(update_me(bool)));
+        connect(panel_effect_controls, SIGNAL(visibilityChanged(bool)), panel_item->findChild<WindowTitleWidget*>(),SLOT(update_me(bool)));
+        connect(panel_timeline, SIGNAL(visibilityChanged(bool)), panel_item->findChild<WindowTitleWidget*>(),SLOT(update_me(bool)));
+    }
+
     setup_layout(false);
 
     connect(ui->menuWindow, SIGNAL(aboutToShow()), this, SLOT(windowMenu_About_To_Be_Shown()));
