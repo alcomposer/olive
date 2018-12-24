@@ -403,9 +403,9 @@ void Timeline::update_sequence() {
     ui->headers->setEnabled(!null_sequence);
 
 	if (null_sequence) {
-		setWindowTitle("Timeline: <none>");
+        setTitle("Timeline: <none>");
 	} else {
-		setWindowTitle("Timeline: " + sequence->name);
+        setTitle("Timeline: " + sequence->name);
 		update_ui(false);
 	}
 }

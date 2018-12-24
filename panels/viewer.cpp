@@ -615,13 +615,13 @@ void Viewer::set_sequence(bool main, Sequence *s) {
 
         ui->glViewerPane->adjust();
 
-        //setWindowTitle(panel_name + seq->name);
+        setTitle(panel_name + seq->name);
 
     } else {
         update_playhead_timecode(0);
         update_end_timecode();
 
-        setWindowTitle(panel_name + "(none)");
+        setTitle(panel_name + "(none)");
     }
 
 	update_header_zoom();

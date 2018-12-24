@@ -13,8 +13,11 @@ public:
     ~DockWidget();
 
     void setTitle(QString);
+public slots:
+    void slotCloseTab(int);
 private:
     WindowTitleWidget * title_bar;
+
 };
 
 #endif // DOCKWIDGET_H

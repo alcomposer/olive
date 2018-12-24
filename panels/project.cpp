@@ -89,7 +89,7 @@ Project::Project(QWidget *parent) :
     source_table->setModel(sorter);
 
 	//retranslateUi(Project);
-	setWindowTitle(QApplication::translate("Project", "Project", nullptr));
+    setTitle(QApplication::translate("Project", "Project", nullptr));
 }
 
 Project::~Project() {
