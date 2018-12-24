@@ -13,3 +13,7 @@ DockWidget::~DockWidget()
 {
 
 }
+void DockWidget::setTitle(QString text){
+    title_bar->setTabText(text);
+    setWindowTitle(text);
+}

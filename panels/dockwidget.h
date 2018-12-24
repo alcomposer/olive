@@ -12,6 +12,7 @@ public:
     DockWidget(QWidget * parent);
     ~DockWidget();
 
+    void setTitle(QString);
 private:
     WindowTitleWidget * title_bar;
 };

@@ -3,7 +3,6 @@
 #include "debug.h"
 
 WindowTitleWidget::WindowTitleWidget(QDockWidget * parent):
-    QTabWidget(parent),
     title("this is a test"),
     tab_bar(new QTabBar(this)),
     parent(parent)
@@ -18,12 +17,19 @@ WindowTitleWidget::WindowTitleWidget(QDockWidget * parent):
 
 
     // addTab(tab_bar, title);
-   setTabsClosable(true);
+  // setTabsClosable(true); -------------
     //removeTab(0);
     //tab_bar->addTab(title);
 }
-WindowTitleWidget::~WindowTitleWidget(){
+WindowTitleWidget::~WindowTitleWidget()
+{
 
+}
+
+void WindowTitleWidget::setTabText(QString tabTitle)
+{
+    title = tabTitle;
+    update_me(true);
 }
 void WindowTitleWidget::update_me(bool hasChanged){
     dout << "doing an update";
@@ -36,6 +42,12 @@ void WindowTitleWidget::update_me(bool hasChanged){
         } else {
             //temp->findChild<WindowTitleWidget*>()->removeTab(0);
             removeTab(0);
+            QList<QTabBar*> tabifiedDocks = mainWindow->findChildren<QTabBar*>();
+            //QVector<QDockWidget*> tabifiedDocks = mainWindow->tabifiedDockWidgets(parent).toVector();
+            dout << tabifiedDocks;
+            foreach (QTabBar* realTab, tabifiedDocks){
+               realTab->setTabsClosable(true);
+            }
         }
     }
 //}

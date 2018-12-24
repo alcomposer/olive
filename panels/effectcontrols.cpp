@@ -220,7 +220,7 @@ void EffectControls::clear_effects(bool clear_cache) {
 	ui->headers->setVisible(false);
 	ui->keyframeView->setEnabled(false);
     if (clear_cache) selected_clips.clear();
-    setWindowTitle(panel_name + "(none)");
+    setTitle(panel_name + "(none)");
 }
 
 void EffectControls::deselect_all_effects(QWidget* sender) {
@@ -267,7 +267,7 @@ void EffectControls::load_effects() {
             }
 		}
 		if (selected_clips.size() > 0) {
-            setWindowTitle(panel_name + sequence->clips.at(selected_clips.at(0))->name);
+            setTitle( panel_name + sequence->clips.at(selected_clips.at(0))->name);
 			ui->verticalScrollBar->setMaximum(qMax(0, ui->effects_area->sizeHint().height() - ui->headers->height() + ui->scrollArea->horizontalScrollBar()->height()/* - ui->keyframeView->height() - ui->headers->height()*/));
 			ui->keyframeView->setEnabled(true);
 			ui->headers->setVisible(true);

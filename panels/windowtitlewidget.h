@@ -12,7 +12,10 @@ class WindowTitleWidget : public QTabWidget
 public:
     WindowTitleWidget(QDockWidget * parent);
     ~WindowTitleWidget();
-        QTabBar * tab_bar;
+
+    void setTabText(QString);
+
+    QTabBar * tab_bar;
 public slots:
     void update_me(bool hasChanged);
 private:
