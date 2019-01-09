@@ -533,6 +533,8 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
                     key.post_handle_x = 0;
                     key.post_handle_y = new_post_handle_y;
                 }
+
+                dout << "Control Point XY: " << key.time << key.data.toDouble() << "Pre Handle XY:" << key.pre_handle_x << key.pre_handle_y << "Post Handle XY: " << key.post_handle_x << key.post_handle_y;
 				moved_keys = true;
 				update_ui(false);
 			}
