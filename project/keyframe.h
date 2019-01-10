@@ -18,6 +18,13 @@ public:
 	double pre_handle_y;
 	double post_handle_x;
 	double post_handle_y;
+
+    // limited value of bezier handles
+    double pre_lim_handle_x;
+    double pre_lim_handle_y;
+    double post_lim_handle_x;
+    double post_lim_handle_y;
+
 };
 
 void delete_keyframes(QVector<EffectField *> &selected_key_fields, QVector<int> &selected_keys);

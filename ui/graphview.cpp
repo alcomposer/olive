@@ -436,6 +436,27 @@ void GraphView::mousePressEvent(QMouseEvent *event) {
 }
 
 void GraphView::mouseMoveEvent(QMouseEvent *event) {
+    /*if(moved_keys){
+        dout << "we are moveing either a key or handle";
+
+        for (int i=0;i<row->fieldCount();i++) {
+            dout << "field: " << i;
+            EffectField* f = row->field(i);
+            if (field_visibility.at(i)) {
+                QVector<int> sorted_keys = sort_keys_from_field(f);
+                for (int j=0;j<selected_keys.size();j++) {
+
+                    //f->keyframes.at(sorted_keys.at(j)).data;
+                    //EffectKeyframe& key = f->keyframes.at(sorted_keys.at(j));
+
+                    //EffectKeyframe& key = f->keyframes[sorted_keys.at(j)];
+
+                    dout << "     Key DATA" << f->keyframes[selected_keys.at(j)].data;
+                }
+            }
+        }
+    }
+    */
     static int counter = 0;
     dout << "mouse move: " << counter;
     if (!mousedown || !click_add) unsetCursor();
@@ -447,6 +468,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 			start_y = event->pos().y();
 			update();
 		} else if (click_add_proc) {
+            dout << "move keyframe";
 			click_add_field->keyframes[click_add_key].time = get_value_x(event->pos().x());
 			click_add_field->keyframes[click_add_key].data = get_value_y(event->pos().y());
 			update_ui(false);
@@ -618,7 +640,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 
 							const EffectKeyframe& last_key = f->keyframes.at(sorted_keys.at(j-1));
 							const EffectKeyframe& key = f->keyframes.at(sorted_keys.at(j));
-                            const EffectKeyframe& next_key = f->keyframes.at(sorted_keys.at(j+1));
+                            //const EffectKeyframe& next_key = f->keyframes.at(sorted_keys.at(j+1));
 
 							int last_key_x = get_screen_x(last_key.time);
 							int key_x = get_screen_x(key.time);
@@ -691,7 +713,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 			}
 		}
 	}
-                            counter++;
+    counter++;
 }
 
 void GraphView::mouseReleaseEvent(QMouseEvent *e) {
