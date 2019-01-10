@@ -158,6 +158,7 @@ bool EffectField::hasKeyframes() {
 
 QVariant EffectField::validate_keyframe_data(double timecode, bool async) {
 	if (hasKeyframes()) {
+
 		int before_keyframe;
 		int after_keyframe;
 		double progress;

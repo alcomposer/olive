@@ -436,7 +436,9 @@ void GraphView::mousePressEvent(QMouseEvent *event) {
 }
 
 void GraphView::mouseMoveEvent(QMouseEvent *event) {
-	if (!mousedown || !click_add) unsetCursor();
+    static int counter = 0;
+    dout << "mouse move: " << counter;
+    if (!mousedown || !click_add) unsetCursor();
 	if (mousedown) {
 		if (event->buttons() & Qt::MiddleButton || panel_timeline->tool == TIMELINE_TOOL_HAND) {
 			set_scroll_x(x_scroll + start_x - event->pos().x());
@@ -449,6 +451,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 			click_add_field->keyframes[click_add_key].data = get_value_y(event->pos().y());
 			update_ui(false);
 		} else if (rect_select) {
+            dout << "doing rect select";
 			rect_select_w = event->pos().x() - rect_select_x;
 			rect_select_h = event->pos().y() - rect_select_y;
 
@@ -480,6 +483,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 		} else {
 			switch (current_handle) {
 			case BEZIER_HANDLE_NONE:
+                dout << "bezier handle none";
 				for (int i=0;i<selected_keys.size();i++) {
 					row->field(selected_keys_fields.at(i))->keyframes[selected_keys.at(i)].time = qRound(selected_keys_old_vals.at(i) + (double(event->pos().x() - start_x)/zoom));
 					if (event->modifiers() & Qt::ShiftModifier) {
@@ -493,6 +497,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 				break;
 			case BEZIER_HANDLE_PRE:
 			case BEZIER_HANDLE_POST:
+                dout << "bezier handle post";
 			{
 				double new_pre_handle_x = old_pre_handle_x;
 				double new_pre_handle_y = old_pre_handle_y;
@@ -542,6 +547,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 			}
 		}
 	} else if (row != NULL) {
+        dout << "row isn't null";
 		// clicking on the curve
 		click_add = false;
 
@@ -581,6 +587,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 		}
 
 		if (!hovering_key) {
+            dout << "    NOT HOVERING";
 			for (int i=0;i<row->fieldCount();i++) {
 				EffectField* f = row->field(i);
 				if (field_visibility.at(i)) {
@@ -603,9 +610,15 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 							click_add_type = f->keyframes.at(sorted_keys.last()).type;
 						}
 					} else {
+
 						for (int j=1;j<sorted_keys.size();j++) {
+
+                            //dout << counter << " Update keyframe: " << j;
+
+
 							const EffectKeyframe& last_key = f->keyframes.at(sorted_keys.at(j-1));
 							const EffectKeyframe& key = f->keyframes.at(sorted_keys.at(j));
+                            const EffectKeyframe& next_key = f->keyframes.at(sorted_keys.at(j+1));
 
 							int last_key_x = get_screen_x(last_key.time);
 							int key_x = get_screen_x(key.time);
@@ -628,7 +641,10 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 								} else if (last_key.type == KEYFRAME_TYPE_BEZIER || key.type == KEYFRAME_TYPE_BEZIER) {
 									QPainterPath bezier_path;
 									bezier_path.moveTo(last_key_x, last_key_y);
+
+
 									if (last_key.type == KEYFRAME_TYPE_BEZIER && key.type == KEYFRAME_TYPE_BEZIER) {
+                                        dout << "drawing";
 										// cubic bezier
 										bezier_path.cubicTo(
 													QPointF(last_key_x+last_key.post_handle_x*zoom, last_key_y-last_key.post_handle_y*zoom),
@@ -664,7 +680,8 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 								}
 							}
 						}
-					}
+
+                    }
 				}
 				if (click_add) {
 					click_add_field = f;
@@ -674,6 +691,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event) {
 			}
 		}
 	}
+                            counter++;
 }
 
 void GraphView::mouseReleaseEvent(QMouseEvent *e) {
