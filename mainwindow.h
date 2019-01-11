@@ -11,14 +11,17 @@ class Timeline;
 class MainWindow : public QMainWindow {
 	Q_OBJECT
 public:
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(QWidget *parent, const QString& an);
 	void updateTitle(const QString &url);
 	~MainWindow();
 
-	void launch_with_project(const char *s);
+	void launch_with_project(const QString& s);
 
 	void make_new_menu(QMenu* parent);
 	void make_inout_menu(QMenu* parent);
+
+	void load_shortcuts(const QString &fn, bool first = false);
+	void save_shortcuts(const QString &fn);
 
 public slots:
 	void undo();
@@ -54,6 +57,8 @@ private slots:
 	bool save_project_as();
 	bool save_project();
 
+	void go_to_in();
+	void go_to_out();
 	void go_to_start();
 	void prev_frame();
 	void playpause();
@@ -91,9 +96,12 @@ private slots:
 	void set_in_point();
 	void set_out_point();
 
+	void clear_in();
+	void clear_out();
 	void clear_inout();
 	void delete_inout();
 	void ripple_delete_inout();
+	void enable_inout();
 
 	// title safe area functions
 	void set_tsa_disable();
@@ -129,6 +137,7 @@ private:
 
 	// file menu actions
 	QMenu* open_recent;
+	QAction* clear_open_recent_action;
 
 	// view menu actions
 	QAction* track_lines;
@@ -170,6 +179,8 @@ private:
 	QAction* enable_drop_on_media_to_replace;
 	QAction* enable_hover_focus;
 	QAction* set_name_and_marker;
+	QAction* loop_action;
+	QAction* pause_at_out_point_action;
 
 	// edit menu actions
 	QAction* undo_action;
@@ -180,6 +191,8 @@ private:
 	void set_button_action_checked(QAction* a);
 
 	bool enable_launch_with_project;
+
+	QString appName;
 };
 
 extern MainWindow* mainWindow;
