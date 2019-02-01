@@ -1446,28 +1446,38 @@ void Timeline::set_marker() {
 
 	std::vector<Clip*> clips_selected;
 	bool clip_mode = false;
+	bool have_clips = false;
 
 	for (int i=0;i<sequence->clips.size();i++) {
 		Clip* c = sequence->clips.at(i);
 
 		if (c != nullptr
-			&& is_clip_selected(c, true)
-			&& c->timeline_in < sequence->playhead
-			&& c->timeline_out > sequence->playhead) {
-				clips_selected.push_back(c);
-				clip_mode=true;
+				&& is_clip_selected(c, true)){
+				have_clips = true;
+				if(c->timeline_in < sequence->playhead
+					&& c->timeline_out > sequence->playhead) {
+						clips_selected.push_back(c);
+						clip_mode = true;
+			}
 		}
 	}
 
 	ComboAction* ca = new ComboAction();
 
 	if (!add_marker) {
+		if (have_clips && !clip_mode){
+			QMessageBox d(this);
+			d.setIcon(QMessageBox::Warning);
+			d.setText(tr("No media under playhead, unable to add marker."));
+			d.exec();
+		}else{
 		QInputDialog d(this);
 		d.setWindowTitle(tr("Set Marker"));
 		d.setLabelText(clip_mode? tr("Set clip marker name:"): tr("Set sequence marker name:"));
 		d.setInputMode(QInputDialog::TextInput);
 		add_marker = (d.exec() == QDialog::Accepted);
 		marker_name = d.textValue();
+		}
 	}
 
 	if (add_marker) {
