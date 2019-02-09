@@ -160,7 +160,8 @@ int FlowLayout::doLayout(const QRect &rect, bool testOnly) const
     int lineHeight = 0;
 
     QLayoutItem *item;
-    foreach (item, itemList) {
+	for (int i = 0; i < itemList.count();i++) {
+		item = itemList.at(i);
         QWidget *wid = item->widget();
         int spaceX = horizontalSpacing();
         if (spaceX == -1)
@@ -170,6 +171,12 @@ int FlowLayout::doLayout(const QRect &rect, bool testOnly) const
         if (spaceY == -1)
             spaceY = wid->style()->layoutSpacing(
                 QSizePolicy::PushButton, QSizePolicy::PushButton, Qt::Vertical);
+		if (wid->objectName() == "toolHandButton"
+			|| wid->objectName() == "zoomInButton"
+			|| wid->objectName() ==	"recordButton") {
+			x = effectiveRect.x();
+			y = y + lineHeight + spaceY;
+		}
         int nextX = x + item->sizeHint().width() + spaceX;
         if (nextX - spaceX > effectiveRect.right() && lineHeight > 0) {
             x = effectiveRect.x();
@@ -186,9 +193,8 @@ int FlowLayout::doLayout(const QRect &rect, bool testOnly) const
     }
     return y + lineHeight - rect.y() + bottom;
 }
-int FlowLayout::smartSpacing(QStyle::PixelMetric pm) const
-{
-    QObject *parent = this->parent();
+int FlowLayout::smartSpacing(QStyle::PixelMetric pm) const {
+	QObject *parent = this->parent();
     if (!parent) {
         return -1;
     } else if (parent->isWidgetType()) {

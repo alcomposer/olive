@@ -1677,7 +1677,7 @@ void Timeline::setup_ui() {
 	tool_button_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	FlowLayout* tool_buttons_layout = new FlowLayout(tool_button_widget);
-	tool_buttons_layout->setSpacing(4);
+	tool_buttons_layout->setSpacing(0);
 	tool_buttons_layout->setMargin(0);
 
 	toolArrowButton = new QPushButton();
@@ -1688,6 +1688,7 @@ void Timeline::setup_ui() {
 	toolArrowButton->setCheckable(true);
 	toolArrowButton->setToolTip(tr("Pointer Tool") + " (V)");
 	toolArrowButton->setProperty("tool", TIMELINE_TOOL_POINTER);
+	toolArrowButton->setObjectName("toolArrowButton");
 	connect(toolArrowButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolArrowButton);
 
@@ -1699,6 +1700,7 @@ void Timeline::setup_ui() {
 	toolEditButton->setCheckable(true);
 	toolEditButton->setToolTip(tr("Edit Tool") + " (X)");
 	toolEditButton->setProperty("tool", TIMELINE_TOOL_EDIT);
+	toolEditButton->setObjectName("toolEditButton");
 	connect(toolEditButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolEditButton);
 
@@ -1710,6 +1712,7 @@ void Timeline::setup_ui() {
 	toolRippleButton->setCheckable(true);
 	toolRippleButton->setToolTip(tr("Ripple Tool") + " (B)");
 	toolRippleButton->setProperty("tool", TIMELINE_TOOL_RIPPLE);
+	toolRippleButton->setObjectName("toolRippleButton");
 	connect(toolRippleButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolRippleButton);
 
@@ -1721,6 +1724,7 @@ void Timeline::setup_ui() {
 	toolRazorButton->setCheckable(true);
 	toolRazorButton->setToolTip(tr("Razor Tool") + " (C)");
 	toolRazorButton->setProperty("tool", TIMELINE_TOOL_RAZOR);
+	toolRazorButton->setObjectName("toolRazorButton");
 	connect(toolRazorButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolRazorButton);
 
@@ -1732,6 +1736,7 @@ void Timeline::setup_ui() {
 	toolSlipButton->setCheckable(true);
 	toolSlipButton->setToolTip(tr("Slip Tool") + " (Y)");
 	toolSlipButton->setProperty("tool", TIMELINE_TOOL_SLIP);
+	toolSlipButton->setObjectName("toolSlipButton");
 	connect(toolSlipButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolSlipButton);
 
@@ -1743,6 +1748,7 @@ void Timeline::setup_ui() {
 	toolSlideButton->setCheckable(true);
 	toolSlideButton->setToolTip(tr("Slide Tool") + " (U)");
 	toolSlideButton->setProperty("tool", TIMELINE_TOOL_SLIDE);
+	toolSlideButton->setObjectName("toolSlideButton");
 	connect(toolSlideButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolSlideButton);
 
@@ -1754,18 +1760,9 @@ void Timeline::setup_ui() {
 	toolHandButton->setCheckable(true);
 	toolHandButton->setToolTip(tr("Hand Tool") + " (H)");
 	toolHandButton->setProperty("tool", TIMELINE_TOOL_HAND);
+	toolHandButton->setObjectName("toolHandButton");
 	connect(toolHandButton, SIGNAL(clicked(bool)), this, SLOT(set_tool()));
 	tool_buttons_layout->addWidget(toolHandButton);
-
-	toolTransitionButton = new QPushButton();
-	QIcon icon8;
-	icon8.addFile(QStringLiteral(":/icons/transition-tool.png"), QSize(), QIcon::Normal, QIcon::On);
-	icon8.addFile(QStringLiteral(":/icons/transition-tool-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
-	toolTransitionButton->setIcon(icon8);
-	toolTransitionButton->setCheckable(true);
-	toolTransitionButton->setToolTip(tr("Transition Tool") + " (T)");
-	connect(toolTransitionButton, SIGNAL(clicked(bool)), this, SLOT(transition_tool_click()));
-	tool_buttons_layout->addWidget(toolTransitionButton);
 
 	snappingButton = new QPushButton();
 	QIcon icon9;
@@ -1775,8 +1772,40 @@ void Timeline::setup_ui() {
 	snappingButton->setCheckable(true);
 	snappingButton->setChecked(true);
 	snappingButton->setToolTip(tr("Snapping") + " (S)");
+	snappingButton->setObjectName("snappingButton");
 	connect(snappingButton, SIGNAL(toggled(bool)), this, SLOT(snapping_clicked(bool)));
 	tool_buttons_layout->addWidget(snappingButton);
+
+	recordButton = new QPushButton();
+	QIcon icon12;
+	icon12.addFile(QStringLiteral(":/icons/record.png"), QSize(), QIcon::Normal, QIcon::On);
+	icon12.addFile(QStringLiteral(":/icons/record-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
+	recordButton->setIcon(icon12);
+	recordButton->setToolTip(tr("Record audio"));
+	recordButton->setObjectName("recordButton");
+	connect(recordButton, SIGNAL(clicked(bool)), this, SLOT(record_btn_click()));
+	tool_buttons_layout->addWidget(recordButton);
+
+	toolTransitionButton = new QPushButton();
+	QIcon icon8;
+	icon8.addFile(QStringLiteral(":/icons/transition-tool.png"), QSize(), QIcon::Normal, QIcon::On);
+	icon8.addFile(QStringLiteral(":/icons/transition-tool-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
+	toolTransitionButton->setIcon(icon8);
+	toolTransitionButton->setCheckable(true);
+	toolTransitionButton->setToolTip(tr("Transition Tool") + " (T)");
+	toolTransitionButton->setObjectName("toolTransitionButton");
+	connect(toolTransitionButton, SIGNAL(clicked(bool)), this, SLOT(transition_tool_click()));
+	tool_buttons_layout->addWidget(toolTransitionButton);
+
+	addButton = new QPushButton();
+	QIcon icon13;
+	icon13.addFile(QStringLiteral(":/icons/add-button.png"), QSize(), QIcon::Normal, QIcon::On);
+	icon13.addFile(QStringLiteral(":/icons/add-button-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
+	addButton->setIcon(icon13);
+	addButton->setToolTip(tr("Add title, solid, bars, etc."));
+	addButton->setObjectName("addButton");
+	connect(addButton, SIGNAL(clicked()), this, SLOT(add_btn_click()));
+	tool_buttons_layout->addWidget(addButton);
 
 	zoomInButton = new QPushButton();
 	QIcon icon10;
@@ -1784,6 +1813,7 @@ void Timeline::setup_ui() {
 	icon10.addFile(QStringLiteral(":/icons/zoomin-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
 	zoomInButton->setIcon(icon10);
 	zoomInButton->setToolTip(tr("Zoom In") + " (=)");
+	zoomInButton->setObjectName("zoomInButton");
 	connect(zoomInButton, SIGNAL(clicked(bool)), this, SLOT(zoom_in()));
 	tool_buttons_layout->addWidget(zoomInButton);
 
@@ -1793,26 +1823,9 @@ void Timeline::setup_ui() {
 	icon11.addFile(QStringLiteral(":/icons/zoomout-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
 	zoomOutButton->setIcon(icon11);
 	zoomOutButton->setToolTip(tr("Zoom Out") + " (-)");
+	zoomOutButton->setObjectName("zoomOutButton");
 	connect(zoomOutButton, SIGNAL(clicked(bool)), this, SLOT(zoom_out()));
 	tool_buttons_layout->addWidget(zoomOutButton);
-
-	recordButton = new QPushButton();
-	QIcon icon12;
-	icon12.addFile(QStringLiteral(":/icons/record.png"), QSize(), QIcon::Normal, QIcon::On);
-	icon12.addFile(QStringLiteral(":/icons/record-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
-	recordButton->setIcon(icon12);
-	recordButton->setToolTip(tr("Record audio"));
-	connect(recordButton, SIGNAL(clicked(bool)), this, SLOT(record_btn_click()));
-	tool_buttons_layout->addWidget(recordButton);
-
-	addButton = new QPushButton();
-	QIcon icon13;
-	icon13.addFile(QStringLiteral(":/icons/add-button.png"), QSize(), QIcon::Normal, QIcon::On);
-	icon13.addFile(QStringLiteral(":/icons/add-button-disabled.png"), QSize(), QIcon::Disabled, QIcon::On);
-	addButton->setIcon(icon13);
-	addButton->setToolTip(tr("Add title, solid, bars, etc."));
-	connect(addButton, SIGNAL(clicked()), this, SLOT(add_btn_click()));
-	tool_buttons_layout->addWidget(addButton);
 
 	horizontalLayout->addWidget(tool_button_widget);
 
