@@ -2181,9 +2181,13 @@ void TimelineWidget::mouseMoveEvent(QMouseEvent *event) {
 			if (found) {
 
                 if (panel_timeline->trim_in_point) { // if we're trimming an IN point
-                    setCursor(Olive::Cursor_LeftTrim);
+					if (panel_timeline->tool == TIMELINE_TOOL_RIPPLE){
+						setCursor(Olive::Cursor_LeftRipple);
+					}else setCursor(Olive::Cursor_LeftTrim);
                 } else { // if we're trimming an OUT point
-                    setCursor(Olive::Cursor_RightTrim);
+					if (panel_timeline->tool == TIMELINE_TOOL_RIPPLE){
+						setCursor(Olive::Cursor_RightRipple);
+					}else setCursor(Olive::Cursor_RightTrim);
                 }
 
 			} else {
@@ -2221,7 +2225,7 @@ void TimelineWidget::mouseMoveEvent(QMouseEvent *event) {
 			}
 		} else if (panel_timeline->tool == TIMELINE_TOOL_SLIP) {
 			if (getClipIndexFromCoords(panel_timeline->cursor_frame, panel_timeline->cursor_track) > -1) {
-				setCursor(Qt::SizeHorCursor);
+				setCursor(Olive::Cursor_Slip);
 			} else {
 				unsetCursor();
 			}

@@ -27,10 +27,15 @@
 
 QCursor Olive::Cursor_LeftTrim;
 QCursor Olive::Cursor_RightTrim;
+QCursor Olive::Cursor_LeftRipple;
+QCursor Olive::Cursor_RightRipple;
+QCursor Olive::Cursor_Slip;
+QCursor Olive::Cursor_Razor;
 
 QCursor load_cursor(const QString& file, int hotX, int hotY, const bool& right_aligned){
     // load specified file into a pixmap
     QPixmap temp(file);
+	temp = temp.scaled(24,24,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     // set cursor's horizontal hotspot
     if (right_aligned) {
@@ -43,7 +48,11 @@ QCursor load_cursor(const QString& file, int hotX, int hotY, const bool& right_a
 
 void init_custom_cursors(){
     qInfo() << "Initializing custom cursors";
-    Olive::Cursor_LeftTrim = load_cursor(":/cursors/left_side.png", 0, -1, false);
-    Olive::Cursor_RightTrim = load_cursor(":/cursors/right_side.png", 0, -1, true);
+	Olive::Cursor_LeftTrim    = load_cursor(":/cursors/1_left_32.png",  -1, -1, false);
+	Olive::Cursor_RightTrim   = load_cursor(":/cursors/1_right_32.png", -1, -1, false);
+	Olive::Cursor_LeftRipple   = load_cursor(":/cursors/3_left_32.png",  -1, -1, false);
+	Olive::Cursor_RightRipple  = load_cursor(":/cursors/3_right_32.png", -1, -1, false);
+	Olive::Cursor_Slip = load_cursor(":/cursors/4_32.png", -1, -1, false);
+	Olive::Cursor_Razor       = load_cursor(":/cursors/5c_32.png",       0, -1, false);
     qInfo() << "Finished initializing custom cursors";
 }

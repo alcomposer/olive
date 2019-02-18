@@ -2,5 +2,15 @@
     <qresource prefix="/cursors">
         <file>left_side.png</file>
         <file>right_side.png</file>
+        <file>1_left_16.png</file>
+        <file>1_right_16.png</file>
+        <file>5c_16.png</file>
+        <file>5c_32.png</file>
+        <file>1_left_32.png</file>
+        <file>1_right_32.png</file>
+        <file>2_32.png</file>
+        <file>3_left_32.png</file>
+        <file>4_32.png</file>
+        <file>3_right_32.png</file>
     </qresource>
 </RCC>

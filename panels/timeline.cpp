@@ -37,6 +37,7 @@
 #include "ui/audiomonitor.h"
 #include "ui/flowlayout.h"
 #include "mainwindow.h"
+#include "ui/cursors.h"
 #include "debug.h"
 
 #include <QTime>
@@ -2085,7 +2086,7 @@ void Timeline::set_tool() {
 	switch (tool) {
 	case TIMELINE_TOOL_EDIT:
 	case TIMELINE_TOOL_RAZOR:
-		timeline_area->setCursor(Qt::IBeamCursor);
+		timeline_area->setCursor(Olive::Cursor_Razor);
 		break;
 	case TIMELINE_TOOL_HAND:
 		timeline_area->setCursor(Qt::OpenHandCursor);
