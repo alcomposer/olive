@@ -35,6 +35,7 @@
 #include "ui/audiomonitor.h"
 #include "ui/panel.h"
 #include "ui/trackcontrols.h"
+#include "ui/trackcontrolswidget.h"
 
 enum CreateObjects {
   ADD_OBJ_TITLE,
@@ -294,7 +295,9 @@ private:
   QWidget* timeline_area;
   TimelineWidget* video_area;
   TimelineWidget* audio_area;
-  TrackControls* track_controls_area;
+  //TrackControls* track_controls_area;
+  TrackControlsWidget* video_track_controls;
+  TrackControlsWidget* audio_track_controls;
   QWidget* editAreas;
   QScrollBar* videoScrollbar;
   QScrollBar* audioScrollbar;

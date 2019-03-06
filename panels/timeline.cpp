@@ -513,7 +513,9 @@ void Timeline::repaint_timeline() {
       headers->update();
       video_area->update();
       audio_area->update();
-      track_controls_area->update();
+      video_track_controls->update();
+      audio_track_controls->update();
+      //track_controls_area->update();
 
       if (olive::ActiveSequence != nullptr
           && !zoom_just_changed) {
@@ -1947,9 +1949,9 @@ void Timeline::setup_ui() {
 
   horizontalLayout->addWidget(tool_button_widget);
 
-  track_controls_area = new TrackControls();
-  track_controls_area->setFocusPolicy(Qt::ClickFocus);
-  horizontalLayout->addWidget(track_controls_area);
+  //track_controls_area = new TrackControls();
+  //track_controls_area->setFocusPolicy(Qt::ClickFocus);
+  //horizontalLayout->addWidget(track_controls_area);
 
   timeline_area = new QWidget();
   QSizePolicy timeline_area_policy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -1980,6 +1982,9 @@ void Timeline::setup_ui() {
   videoContainerLayout->setSpacing(0);
   videoContainerLayout->setContentsMargins(0, 0, 0, 0);
 
+  video_track_controls = new TrackControlsWidget();
+  videoContainerLayout->addWidget(video_track_controls);
+
   video_area = new TimelineWidget();
   video_area->setFocusPolicy(Qt::ClickFocus);
   videoContainerLayout->addWidget(video_area);
@@ -1996,6 +2001,9 @@ void Timeline::setup_ui() {
   QHBoxLayout* audioContainerLayout = new QHBoxLayout(audioContainer);
   audioContainerLayout->setSpacing(0);
   audioContainerLayout->setContentsMargins(0, 0, 0, 0);
+
+  audio_track_controls = new TrackControlsWidget();
+  audioContainerLayout->addWidget(audio_track_controls);
 
   audio_area = new TimelineWidget();
   audio_area->setFocusPolicy(Qt::ClickFocus);
