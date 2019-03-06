@@ -113,7 +113,11 @@ void RenderThread::run() {
 
         front_buffer_switcher = !front_buffer_switcher;
 
-        emit ready();
+        if (texture_failed) {
+          queued = true;
+        } else {
+          emit ready();
+        }
       }
     }
   }
