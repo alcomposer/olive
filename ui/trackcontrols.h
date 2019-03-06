@@ -7,9 +7,13 @@
 #include "project/media.h"
 #include "project/undo.h"
 #include "timelinetools.h"
+#include "trackcontrolswidget.h"
 
+
+#include <QVBoxLayout>
 #include <QObject>
 #include <QWidget>
+#include <QSplitter>
 
 class Timeline;
 
@@ -21,6 +25,10 @@ public:
     void update();
 private:
     void paintEvent(QPaintEvent*);
+    QVBoxLayout* track_controls_layout;
+    TrackControlsWidget* video_track_controls;
+    QSplitter* splitter_;
+    TrackControlsWidget* audio_track_controls;
 };
 
 #endif // TRACKCONTROLS_H
