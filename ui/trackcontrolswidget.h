@@ -14,21 +14,31 @@
 #include <QWidget>
 #include <QVector>
 #include <QVBoxLayout>
+#include <QScrollBar>
 
 class Timeline;
+
+namespace olive{
+enum tracktype {VideoTrack,AudioTrack};
+}
 
 class TrackControlsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    TrackControlsWidget(QWidget* parent = nullptr);
+    TrackControlsWidget(olive::tracktype type = olive::VideoTrack, QWidget* parent = nullptr);
     ~TrackControlsWidget();
     void update();
+    void resizeEvent(QResizeEvent *);
+    QScrollBar * scrollBar;
 private:
-    int video_tracks;
-    int audio_tracks;
+    int scroll;
+    int trackCount;
+    olive::tracktype _type;
     QVBoxLayout* track_box_layout;
-    //QVector<TrackControlsBox*> track_control_boxes;
+    QVector<TrackControlsBox*> track_control_boxes;
+public slots:
+  void setScroll(int);
 };
 
 #endif // TRACKCONTROLSWIDGET_H

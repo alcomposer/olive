@@ -37,7 +37,6 @@
 #include "ui/audiomonitor.h"
 #include "ui/flowlayout.h"
 #include "mainwindow.h"
-#include "ui/trackcontrols.h"
 #include "debug.h"
 
 #include <QTime>
@@ -96,6 +95,8 @@ Timeline::Timeline(QWidget *parent) :
   video_area->bottom_align = true;
   video_area->scrollBar = videoScrollbar;
   audio_area->scrollBar = audioScrollbar;
+  audio_track_controls->scrollBar = audioScrollbar; //ALEX_TODO
+  video_track_controls->scrollBar = videoScrollbar; //ALEX_TODO
 
   tool_buttons.append(toolArrowButton);
   tool_buttons.append(toolEditButton);
@@ -1982,7 +1983,7 @@ void Timeline::setup_ui() {
   videoContainerLayout->setSpacing(0);
   videoContainerLayout->setContentsMargins(0, 0, 0, 0);
 
-  video_track_controls = new TrackControlsWidget();
+  video_track_controls = new TrackControlsWidget(olive::VideoTrack);
   videoContainerLayout->addWidget(video_track_controls);
 
   video_area = new TimelineWidget();
@@ -2002,7 +2003,7 @@ void Timeline::setup_ui() {
   audioContainerLayout->setSpacing(0);
   audioContainerLayout->setContentsMargins(0, 0, 0, 0);
 
-  audio_track_controls = new TrackControlsWidget();
+  audio_track_controls = new TrackControlsWidget(olive::AudioTrack);
   audioContainerLayout->addWidget(audio_track_controls);
 
   audio_area = new TimelineWidget();
