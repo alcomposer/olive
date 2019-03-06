@@ -3196,7 +3196,7 @@ void TimelineWidget::paintEvent(QPaintEvent*) {
 
     // Draw track lines
     if (olive::CurrentConfig.show_track_lines) {
-      p.setPen(QColor(0, 0, 0, 96));
+      p.setPen(QColor(255, 0, 0, 96));
       audio_track_limit++;
       if (video_track_limit == 0) video_track_limit--;
 

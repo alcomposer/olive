@@ -37,6 +37,7 @@
 #include "ui/audiomonitor.h"
 #include "ui/flowlayout.h"
 #include "mainwindow.h"
+#include "ui/trackcontrols.h"
 #include "debug.h"
 
 #include <QTime>
@@ -512,6 +513,7 @@ void Timeline::repaint_timeline() {
       headers->update();
       video_area->update();
       audio_area->update();
+      track_controls_area->update();
 
       if (olive::ActiveSequence != nullptr
           && !zoom_just_changed) {
@@ -1944,6 +1946,10 @@ void Timeline::setup_ui() {
   tool_buttons_layout->addWidget(addButton);
 
   horizontalLayout->addWidget(tool_button_widget);
+
+  track_controls_area = new TrackControls();
+  track_controls_area->setFocusPolicy(Qt::ClickFocus);
+  horizontalLayout->addWidget(track_controls_area);
 
   timeline_area = new QWidget();
   QSizePolicy timeline_area_policy(QSizePolicy::Minimum, QSizePolicy::Minimum);

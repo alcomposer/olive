@@ -34,6 +34,7 @@
 #include "ui/resizablescrollbar.h"
 #include "ui/audiomonitor.h"
 #include "ui/panel.h"
+#include "ui/trackcontrols.h"
 
 enum CreateObjects {
   ADD_OBJ_TITLE,
@@ -293,6 +294,7 @@ private:
   QWidget* timeline_area;
   TimelineWidget* video_area;
   TimelineWidget* audio_area;
+  TrackControls* track_controls_area;
   QWidget* editAreas;
   QScrollBar* videoScrollbar;
   QScrollBar* audioScrollbar;

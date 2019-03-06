@@ -160,7 +160,8 @@ SOURCES += \
     rendering/clipqueue.cpp \
     rendering/audio.cpp \
     dialogs/clippropertiesdialog.cpp \
-    rendering/framebufferobject.cpp
+    rendering/framebufferobject.cpp \
+    ui/trackcontrols.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -272,7 +273,8 @@ HEADERS += \
     rendering/cacher.h \
     rendering/audio.h \
     dialogs/clippropertiesdialog.h \
-    rendering/framebufferobject.h
+    rendering/framebufferobject.h \
+    ui/trackcontrols.h
 
 FORMS +=
 
