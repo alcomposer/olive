@@ -18,6 +18,7 @@ class TrackControls : public QWidget
     Q_OBJECT
 public:
     TrackControls(QWidget* parent = nullptr);
+    void update();
 private:
     void paintEvent(QPaintEvent*);
 };
