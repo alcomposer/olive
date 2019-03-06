@@ -65,9 +65,9 @@ void TrackControlsWidget::update(){
         QString text;
         if (_type == olive::VideoTrack) {
             track_box_layout->setDirection(QBoxLayout::BottomToTop);
-            text = "Video: ";
-        } else text = "Audio: ";
-        qInfo() << "audio track count: " << audio_track_limit << " video track count: " << video_track_limit;
+            text = "V: ";
+        } else text = "A: ";
+        //qInfo() << "audio track count: " << audio_track_limit << " video track count: " << video_track_limit;
         int trackLimit = _type == olive::VideoTrack? video_track_limit : audio_track_limit+1;
 
         while (trackCount < qAbs(trackLimit)){
