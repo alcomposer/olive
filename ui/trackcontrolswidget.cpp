@@ -7,6 +7,8 @@
 #include "timelinewidget.h"
 #include "panels/panels.h"
 
+#include <QLabel>
+
 
 TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent) :
     QWidget(parent)
@@ -25,10 +27,6 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
 TrackControlsWidget::~TrackControlsWidget()
 {
 
-}
-void TrackControlsWidget::setScroll(int s) {
-  scroll = s;
-  update();
 }
 
 void TrackControlsWidget::update(){
@@ -57,19 +55,24 @@ void TrackControlsWidget::update(){
             panel_height += panel_timeline->GetTrackHeight(i);
           }
         }
-        if (!_type) {
-          scrollBar->setMinimum(qMin(0, - panel_height + height()));
-        } else {
-          scrollBar->setMaximum(qMax(0, panel_height - height()));
-        }
+       // if (!_type) {
+       //   scrollBar->setMinimum(qMin(0, - panel_height + height()));
+        //} else {
+        //  scrollBar->setMaximum(qMax(0, panel_height - height()));
+      //  }
 
 //---------------------------------------
+        QString text;
+        if (_type == olive::VideoTrack) {
+            track_box_layout->setDirection(QBoxLayout::BottomToTop);
+            text = "Video: ";
+        } else text = "Audio: ";
         qInfo() << "audio track count: " << audio_track_limit << " video track count: " << video_track_limit;
         int trackLimit = _type == olive::VideoTrack? video_track_limit : audio_track_limit+1;
 
         while (trackCount < qAbs(trackLimit)){
-            track_control_boxes.push_back(new TrackControlsBox());
-            track_control_boxes.at(trackCount)->setMinimumHeight(50);
+            track_control_boxes.push_back(new TrackControlsBox(QString(text+QString::number(trackCount+1))));
+            track_control_boxes.at(trackCount)->setMinimumHeight(10);
             track_box_layout->addWidget(track_control_boxes.at(trackCount));
             trackCount++;
         }
@@ -85,5 +88,5 @@ setVisible(false);
 }
 
 void TrackControlsWidget::resizeEvent(QResizeEvent *) {
-  scrollBar->setPageStep(height());
+  //scrollBar->setPageStep(height());
 }

@@ -30,15 +30,13 @@ public:
     ~TrackControlsWidget();
     void update();
     void resizeEvent(QResizeEvent *);
-    QScrollBar * scrollBar;
+   // QScrollBar * scrollBar;
 private:
     int scroll;
     int trackCount;
     olive::tracktype _type;
     QVBoxLayout* track_box_layout;
     QVector<TrackControlsBox*> track_control_boxes;
-public slots:
-  void setScroll(int);
 };
 
 #endif // TRACKCONTROLSWIDGET_H

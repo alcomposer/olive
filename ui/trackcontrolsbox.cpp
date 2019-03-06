@@ -1,8 +1,18 @@
 #include "trackcontrolsbox.h"
 
-TrackControlsBox::TrackControlsBox(QWidget* parent) :
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QPushButton>
+
+TrackControlsBox::TrackControlsBox(QString text, QWidget* parent) :
     QWidget(parent)
 {
+    QLabel* test = new QLabel(text);
+    QPushButton* buttonTest = new QPushButton();
+    QHBoxLayout * layoutTest = new QHBoxLayout();
+    layoutTest->addWidget(test);
+    layoutTest->addWidget(buttonTest);
+    setLayout(layoutTest);
 
 }
 

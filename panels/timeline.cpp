@@ -95,8 +95,6 @@ Timeline::Timeline(QWidget *parent) :
   video_area->bottom_align = true;
   video_area->scrollBar = videoScrollbar;
   audio_area->scrollBar = audioScrollbar;
-  audio_track_controls->scrollBar = audioScrollbar; //ALEX_TODO
-  video_track_controls->scrollBar = videoScrollbar; //ALEX_TODO
 
   tool_buttons.append(toolArrowButton);
   tool_buttons.append(toolEditButton);

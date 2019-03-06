@@ -18,7 +18,7 @@ class TrackControlsBox : public QWidget
 {
     Q_OBJECT
 public:
-    TrackControlsBox(QWidget* parent = nullptr);
+    TrackControlsBox(QString text, QWidget* parent = nullptr);
     ~TrackControlsBox();
     void paintEvent(QPaintEvent *);
 };
