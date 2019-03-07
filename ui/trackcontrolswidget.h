@@ -34,6 +34,7 @@ public:
    // QScrollBar * scrollBar;
     QScrollArea* scroll_area;
     QWidget* layout_holder;
+    void paintEvent(QPaintEvent*);
 private:
     int scroll;
     int trackCount;

@@ -27,7 +27,7 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
     scroll_area->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     scroll_area->setWidgetResizable(true);
     //scroll_area->setMinimumHeight(1000);
-    //scroll_area->setAlignment(Qt::AlignBottom);
+    scroll_area->setAlignment(Qt::AlignBottom);
     scroll_area->setContentsMargins(0,0,0,0);
     InvertScrollArea* invertEvent = new InvertScrollArea(this);
     //scroll_area->installEventFilter(invertEvent); //for now don't send resize events to scrollarea
@@ -70,8 +70,16 @@ TrackControlsWidget::~TrackControlsWidget()
 
 }
 
+void TrackControlsWidget::paintEvent(QPaintEvent*)
+{
+    //better to put this into a subclass of QScrollArea? Or do it propperly? FIXME
+    if (!_type)scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum());
+}
+
 void TrackControlsWidget::update(){
     if(olive::ActiveSequence != nullptr){
+
+        //better to do this in subclass of QScrollArea? When resizing track this solution is VERY laggy! :-(
         //find current video track size
         int video_track_limit = 0;
         int audio_track_limit = 0;
@@ -133,12 +141,13 @@ void TrackControlsWidget::update(){
 
         for (int i = 0; i < track_control_boxes.count(); i++){
             track_box_layout->itemAt(i)->widget()->setMinimumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1)+(_type?1:1));
-            //track_box_layout->itemAt(i)->widget()->setMaximumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1));
     }
+        if (rebuilding) qInfo() <<"doing an update";
 
         setVisible(true);
     }//else
 //setVisible(false);
+    repaint();
 }
 
 void TrackControlsWidget::resizeEvent(QResizeEvent *) {
