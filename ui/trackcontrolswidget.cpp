@@ -17,7 +17,7 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
     ,scroll(0)
 
 {
-    setMinimumWidth(150);
+    setMinimumWidth(150); //FIXME hardcode for now
     setMaximumWidth(150);
 
     scroll_area = new QScrollArea();
@@ -92,7 +92,7 @@ void TrackControlsWidget::update(){
         } else text = "A";
         int trackLimit = _type == olive::VideoTrack? video_track_limit : audio_track_limit+1;
 
-        if (track_box_layout->count()-1 == track_control_boxes.count() & trackCount != qAbs(trackLimit)){
+        if (track_box_layout->count()-1 == trackCount & trackCount != qAbs(trackLimit)){
             track_box_layout->removeWidget(track_box_layout->itemAt(track_box_layout->count()-1)->widget());
         }
 
