@@ -35,6 +35,7 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
 
     track_box_layout = new QVBoxLayout();
     track_box_layout->setContentsMargins(0,0,0,0);
+    track_box_layout->setSpacing(0);
     //if(!_type) track_box_layout->setAlignment(Qt::AlignBottom);
     //track_box_layout->setAlignment(Qt::AlignmentFlag::AlignBaseline);
 
@@ -49,10 +50,12 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
 
     scroll_area->setWidget(layout_holder);
 
+
     final_layout = new QVBoxLayout();
     //final_layout->setSizeConstraint(QSizePolicy::Expanding)
     //if (!_type) final_layout->addStretch(1); //adding a stretch to top works!!!!!!!!!!!!!!!!!!!!!!
     final_layout->addWidget(scroll_area);
+    final_layout->setSpacing(0);
     final_layout->setContentsMargins(0,0,0,0);
     //final_layout->setAlignment(Qt::AlignBottom);
     //final_layout->setAlignment(Qt::AlignmentFlag::AlignBottom);
@@ -95,8 +98,8 @@ void TrackControlsWidget::update(){
         QString text;
         if (_type == olive::VideoTrack) {
             track_box_layout->setDirection(QBoxLayout::BottomToTop);
-            text = "V: ";
-        } else text = "A: ";
+            text = "V";
+        } else text = "A";
         int trackLimit = _type == olive::VideoTrack? video_track_limit : audio_track_limit+1;
 
         bool rebuilding = false;
@@ -129,7 +132,7 @@ void TrackControlsWidget::update(){
         }
 
         for (int i = 0; i < track_control_boxes.count(); i++){
-            track_box_layout->itemAt(i)->widget()->setMinimumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1));
+            track_box_layout->itemAt(i)->widget()->setMinimumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1)+(_type?1:1));
             //track_box_layout->itemAt(i)->widget()->setMaximumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1));
     }
 
