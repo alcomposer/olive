@@ -277,7 +277,6 @@ HEADERS += \
     rendering/framebufferobject.h \
     ui/trackcontrolswidget.h \
     ui/trackcontrolsbox.h \
-    ui/invertscrollarea.h
 
 FORMS +=
 

@@ -31,7 +31,6 @@ public:
     ~TrackControlsWidget();
     void update();
     void resizeEvent(QResizeEvent *);
-   // QScrollBar * scrollBar;
     QScrollArea* scroll_area;
     QWidget* layout_holder;
     void paintEvent(QPaintEvent*);

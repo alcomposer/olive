@@ -61,7 +61,6 @@ void TrackControlsWidget::paintEvent(QPaintEvent*)
 void TrackControlsWidget::update(){
     if(olive::ActiveSequence != nullptr){
 
-        //better to do this in subclass of QScrollArea? When resizing track this solution is VERY laggy! :-(
         //find current video track size
         int video_track_limit = 0;
         int audio_track_limit = 0;
@@ -127,11 +126,11 @@ void TrackControlsWidget::update(){
         if (rebuilding) qInfo() <<"doing an update";
 
         setVisible(true);
-    }else
-setVisible(false);
+    }else {
+    setVisible(false);
+    }
     repaint();
 }
 
 void TrackControlsWidget::resizeEvent(QResizeEvent *) {
-  //scrollBar->setPageStep(height());
 }
