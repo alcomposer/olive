@@ -15,6 +15,7 @@
 #include <QVector>
 #include <QVBoxLayout>
 #include <QScrollBar>
+#include <QScrollArea>
 
 class Timeline;
 
@@ -31,11 +32,14 @@ public:
     void update();
     void resizeEvent(QResizeEvent *);
    // QScrollBar * scrollBar;
+    QScrollArea* scroll_area;
+    QWidget* layout_holder;
 private:
     int scroll;
     int trackCount;
     olive::tracktype _type;
     QVBoxLayout* track_box_layout;
+    QVBoxLayout* final_layout;
     QVector<TrackControlsBox*> track_control_boxes;
 };
 
