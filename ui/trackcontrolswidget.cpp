@@ -55,6 +55,7 @@ TrackControlsWidget::~TrackControlsWidget()
 void TrackControlsWidget::paintEvent(QPaintEvent*)
 {
     //better to put this into a subclass of QScrollArea? Or do it propperly? FIXME
+    //we set the scroll bar to the bottom when we repaint the tracks
     if (!_type)scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum());
 }
 
@@ -91,11 +92,8 @@ void TrackControlsWidget::update(){
         } else text = "A";
         int trackLimit = _type == olive::VideoTrack? video_track_limit : audio_track_limit+1;
 
-        bool rebuilding = false;
-
         if (track_box_layout->count()-1 == track_control_boxes.count() & trackCount != qAbs(trackLimit)){
             track_box_layout->removeWidget(track_box_layout->itemAt(track_box_layout->count()-1)->widget());
-            qInfo() << "removing Spacer";
         }
 
         while (trackCount < qAbs(trackLimit)){
@@ -103,34 +101,24 @@ void TrackControlsWidget::update(){
             track_control_boxes.at(trackCount)->setContentsMargins(0,0,0,0);
             track_box_layout->addWidget(track_control_boxes.at(trackCount));
             trackCount++;
-            rebuilding = true;
-            qInfo() << "adding widgets";
         }
         while (trackCount > qAbs(trackLimit)){
             trackCount--;
             track_box_layout->removeWidget(track_control_boxes.at(trackCount));
             track_control_boxes.at(trackCount)->deleteLater();
             track_control_boxes.pop_back();
-            rebuilding = true;
-            qInfo() << "removing widgets";
         }
         if(track_box_layout->count() == track_control_boxes.count()){
         track_box_layout->addStretch(1);
-        rebuilding = true;
-        qInfo() << "adding spacer";
         }
 
         for (int i = 0; i < track_control_boxes.count(); i++){
             track_box_layout->itemAt(i)->widget()->setMinimumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1)+(_type?1:1));
     }
-        if (rebuilding) qInfo() <<"doing an update";
 
         setVisible(true);
     }else {
     setVisible(false);
     }
     repaint();
-}
-
-void TrackControlsWidget::resizeEvent(QResizeEvent *) {
 }

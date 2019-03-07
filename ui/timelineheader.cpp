@@ -65,7 +65,7 @@ TimelineHeader::TimelineHeader(QWidget *parent) :
 	in_visible(0),
 	fm(font()),
 	dragging_markers(false),
-	scroll(0)
+    scroll(0)
 {
 	height_actual = fm.height();
 	setCursor(Qt::ArrowCursor);

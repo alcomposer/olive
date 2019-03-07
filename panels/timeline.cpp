@@ -1948,10 +1948,6 @@ void Timeline::setup_ui() {
 
   horizontalLayout->addWidget(tool_button_widget);
 
-  //track_controls_area = new TrackControls();
-  //track_controls_area->setFocusPolicy(Qt::ClickFocus);
-  //horizontalLayout->addWidget(track_controls_area);
-
   timeline_area = new QWidget();
   QSizePolicy timeline_area_policy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   timeline_area_policy.setHorizontalStretch(1);
@@ -1964,7 +1960,19 @@ void Timeline::setup_ui() {
   timeline_area_layout->setContentsMargins(0, 0, 0, 0);
 
   headers = new TimelineHeader();
-  timeline_area_layout->addWidget(headers);
+  QHBoxLayout* timeline_area_layout_padding = new QHBoxLayout(timeline_area);
+  timeline_area_layout_padding->setSpacing(0);
+  timeline_area_layout_padding->setContentsMargins(0, 0, 0, 0);
+
+  QWidget* padding_widget = new QWidget();
+  padding_widget->setMaximumWidth(150); //hard code for now FIXME
+  timeline_area_layout_padding->addWidget(padding_widget);
+  timeline_area_layout_padding->addWidget(headers);
+
+  QWidget* headers_padded = new QWidget();
+  headers_padded->setLayout(timeline_area_layout_padding);
+
+  timeline_area_layout->addWidget(headers_padded);
 
   editAreas = new QWidget();
   QHBoxLayout* editAreaLayout = new QHBoxLayout(editAreas);
@@ -1982,6 +1990,7 @@ void Timeline::setup_ui() {
   videoContainerLayout->setContentsMargins(0, 0, 0, 0);
 
   video_track_controls = new TrackControlsWidget(olive::VideoTrack);
+  video_track_controls->setObjectName("videoTrackControls");
   videoContainerLayout->addWidget(video_track_controls);
 
   video_area = new TimelineWidget();

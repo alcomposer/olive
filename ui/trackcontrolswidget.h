@@ -30,7 +30,6 @@ public:
     TrackControlsWidget(olive::tracktype type = olive::VideoTrack, QWidget* parent = nullptr);
     ~TrackControlsWidget();
     void update();
-    void resizeEvent(QResizeEvent *);
     QScrollArea* scroll_area;
     QWidget* layout_holder;
     void paintEvent(QPaintEvent*);
