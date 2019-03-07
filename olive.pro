@@ -162,8 +162,7 @@ SOURCES += \
     dialogs/clippropertiesdialog.cpp \
     rendering/framebufferobject.cpp \
     ui/trackcontrolswidget.cpp \
-    ui/trackcontrolsbox.cpp \
-    ui/invertscrollarea.cpp
+    ui/trackcontrolsbox.cpp
 
 HEADERS += \
         mainwindow.h \

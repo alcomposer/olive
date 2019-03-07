@@ -6,7 +6,6 @@
 #include "timelineheader.h"
 #include "timelinewidget.h"
 #include "panels/panels.h"
-#include "ui/invertscrollarea.h"
 
 #include <QLabel>
 #include <QEvent>
@@ -21,47 +20,30 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
     setMinimumWidth(150);
     setMaximumWidth(150);
 
-
     scroll_area = new QScrollArea();
     scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     scroll_area->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     scroll_area->setWidgetResizable(true);
-    //scroll_area->setMinimumHeight(1000);
     scroll_area->setAlignment(Qt::AlignBottom);
     scroll_area->setContentsMargins(0,0,0,0);
-    InvertScrollArea* invertEvent = new InvertScrollArea(this);
-    //scroll_area->installEventFilter(invertEvent); //for now don't send resize events to scrollarea
-
 
     track_box_layout = new QVBoxLayout();
     track_box_layout->setContentsMargins(0,0,0,0);
     track_box_layout->setSpacing(0);
-    //if(!_type) track_box_layout->setAlignment(Qt::AlignBottom);
-    //track_box_layout->setAlignment(Qt::AlignmentFlag::AlignBaseline);
 
-    //track_box_layout->setAlignment(Qt::AlignBottom);
     layout_holder = new QWidget();
-    //layout_holder->setMinimumHeight(1000);
-    //layout_holder->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    //layout_holder->installEventFilter(invertEvent);
     layout_holder->setLayout(track_box_layout);
     layout_holder->setContentsMargins(0,0,0,0);
 
-
     scroll_area->setWidget(layout_holder);
 
-
     final_layout = new QVBoxLayout();
-    //final_layout->setSizeConstraint(QSizePolicy::Expanding)
-    //if (!_type) final_layout->addStretch(1); //adding a stretch to top works!!!!!!!!!!!!!!!!!!!!!!
     final_layout->addWidget(scroll_area);
     final_layout->setSpacing(0);
     final_layout->setContentsMargins(0,0,0,0);
-    //final_layout->setAlignment(Qt::AlignBottom);
-    //final_layout->setAlignment(Qt::AlignmentFlag::AlignBottom);
-
 
     setLayout(final_layout);
+    setVisible(false);
 
 
 }
@@ -145,8 +127,8 @@ void TrackControlsWidget::update(){
         if (rebuilding) qInfo() <<"doing an update";
 
         setVisible(true);
-    }//else
-//setVisible(false);
+    }else
+setVisible(false);
     repaint();
 }
 
