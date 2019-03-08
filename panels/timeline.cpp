@@ -1997,6 +1997,8 @@ void Timeline::setup_ui() {
   video_area->setFocusPolicy(Qt::ClickFocus);
   videoContainerLayout->addWidget(video_area);
 
+  connect(video_area, SIGNAL(resizingTracks()), video_track_controls, SLOT(forceRepaint()));
+
   videoScrollbar = new QScrollBar();
   videoScrollbar->setMaximum(0);
   videoScrollbar->setSingleStep(20);

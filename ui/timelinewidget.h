@@ -98,6 +98,7 @@ private:
 
   SetSelectionsCommand* selection_command;
 signals:
+  void resizingTracks();
 
 public slots:
   void setScroll(int);

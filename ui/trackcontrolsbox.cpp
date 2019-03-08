@@ -36,7 +36,6 @@ TrackControlsBox::TrackControlsBox(QString text, QWidget* parent) :
     setMinimumHeight(0);
 
     setLayout(vLayout);
-
 }
 
 TrackControlsBox::~TrackControlsBox()

@@ -2129,6 +2129,7 @@ void TimelineWidget::mouseMoveEvent(QMouseEvent *event) {
         panel_timeline->drag_y_start = event->pos().y();
 
         update();
+        emit resizingTracks();
       } else if (panel_timeline->moving_proc) {
 
         // we're currently dragging ghosts
@@ -2667,6 +2668,7 @@ void TimelineWidget::mouseMoveEvent(QMouseEvent *event) {
             track_resizing = true;
             track_target = hover_track;
             setCursor(Qt::SizeVerCursor);
+            //emit resizingTracks();
           }
         }
       }

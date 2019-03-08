@@ -40,6 +40,8 @@ private:
     QVBoxLayout* track_box_layout;
     QVBoxLayout* final_layout;
     QVector<TrackControlsBox*> track_control_boxes;
+public slots:
+    void forceRepaint();
 };
 
 #endif // TRACKCONTROLSWIDGET_H

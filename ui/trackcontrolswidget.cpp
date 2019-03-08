@@ -59,6 +59,14 @@ void TrackControlsWidget::paintEvent(QPaintEvent*)
     if (!_type)scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum());
 }
 
+void TrackControlsWidget::forceRepaint()
+{
+    update();
+    repaint();
+    qInfo() << "doing a repaint of video track only";
+}
+
+
 void TrackControlsWidget::update(){
     if(olive::ActiveSequence != nullptr){
 
@@ -120,5 +128,8 @@ void TrackControlsWidget::update(){
     }else {
     setVisible(false);
     }
-    repaint();
+
+//    repaint();
 }
+
+
