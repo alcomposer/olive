@@ -162,7 +162,8 @@ SOURCES += \
     dialogs/clippropertiesdialog.cpp \
     rendering/framebufferobject.cpp \
     ui/trackcontrolswidget.cpp \
-    ui/trackcontrolsbox.cpp
+    ui/trackcontrolsbox.cpp \
+    ui/trackcontrolsscrollarea.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -277,6 +278,7 @@ HEADERS += \
     rendering/framebufferobject.h \
     ui/trackcontrolswidget.h \
     ui/trackcontrolsbox.h \
+    ui/trackcontrolsscrollarea.h
 
 FORMS +=
 

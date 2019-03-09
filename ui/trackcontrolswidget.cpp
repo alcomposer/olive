@@ -25,7 +25,7 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
     setMinimumWidth(150); //FIXME hardcode for now
     setMaximumWidth(150);
 
-    scroll_area = new QScrollArea();
+    scroll_area = new TrackControlsScrollArea();
     scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     scroll_area->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     scroll_area->setWidgetResizable(true);
@@ -65,12 +65,28 @@ void TrackControlsWidget::setScroll(int value)
     forceRepaint();
 }
 
+void TrackControlsWidget::setRange(int min, int max)
+{
+    qInfo() << "Scroll Range is now: "<< min << " : " << max;
+    scroll_max = max;
+    scroll_min = min;
+}
+
 void TrackControlsWidget::paintEvent(QPaintEvent*)
+{
+    resetScroll();
+}
+
+void TrackControlsWidget::resetScroll()
 {
     //better to put this into a subclass of QScrollArea? Or do it propperly? FIXME
     //we set the scroll bar to the bottom when we repaint the tracks
+
+
     if (_type == olive::VideoTrack){
-        scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum()+scroll);
+        //scroll_area->verticalScrollBar()->setMaximum(scroll_min);
+        //scroll_area->verticalScrollBar()->setMinimum(scroll_max);
+        scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum()+scroll); //this inverts the video vertical scroll
     } else {
         scroll_area->verticalScrollBar()->setSliderPosition(scroll);
     }
@@ -78,14 +94,14 @@ void TrackControlsWidget::paintEvent(QPaintEvent*)
 
 void TrackControlsWidget::forceRepaint()
 {
-    update();
-    repaint();
+    resetScroll();
+    QWidget::update();
 }
 
 
 void TrackControlsWidget::update(){
     if(olive::ActiveSequence != nullptr){
-
+        resetScroll();
         //find current video track size
         int video_track_limit = 0;
         int audio_track_limit = 0;
@@ -148,6 +164,7 @@ void TrackControlsWidget::update(){
     }
 
         setVisible(true);
+        resetScroll();
     }else {
     setVisible(false);
     }

@@ -3331,6 +3331,7 @@ void TimelineWidget::paintEvent(QPaintEvent*) {
 
 void TimelineWidget::resizeEvent(QResizeEvent *) {
   scrollBar->setPageStep(height());
+  emit resizingTracks();
 }
 
 bool TimelineWidget::is_track_visible(int track) {
