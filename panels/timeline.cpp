@@ -514,7 +514,8 @@ void Timeline::repaint_timeline() {
       audio_area->update();
       video_track_controls->update();
       audio_track_controls->update();
-      //track_controls_area->update();
+
+      qInfo() << "we are updating headers, video & audio area & controls";
 
       if (olive::ActiveSequence != nullptr
           && !zoom_just_changed) {
