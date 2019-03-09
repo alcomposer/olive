@@ -2006,6 +2006,8 @@ void Timeline::setup_ui() {
   videoScrollbar->setOrientation(Qt::Vertical);
   videoContainerLayout->addWidget(videoScrollbar);
 
+  connect(videoScrollbar, SIGNAL(sliderMoved(int)), video_track_controls, SLOT(setScroll(int)));
+
   splitter->addWidget(videoContainer);
 
   QWidget* audioContainer = new QWidget();
@@ -2024,8 +2026,9 @@ void Timeline::setup_ui() {
   audioScrollbar = new QScrollBar();
   audioScrollbar->setMaximum(0);
   audioScrollbar->setOrientation(Qt::Vertical);
-
   audioContainerLayout->addWidget(audioScrollbar);
+
+  connect(audioScrollbar, SIGNAL(sliderMoved(int)), audio_track_controls, SLOT(setScroll(int)));
 
   splitter->addWidget(audioContainer);
 

@@ -17,6 +17,11 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
     ,scroll(0)
 
 {
+    _padding = new QWidget();
+    _padding->setMinimumHeight(25); // FIXME hardcode for now, is this even correct value?
+    _padding->setContentsMargins(0,0,0,0);
+    _padding->setObjectName("padding");
+
     setMinimumWidth(150); //FIXME hardcode for now
     setMaximumWidth(150);
 
@@ -52,18 +57,29 @@ TrackControlsWidget::~TrackControlsWidget()
 
 }
 
+void TrackControlsWidget::setScroll(int value)
+{
+    scroll = value;
+    //scroll_area->verticalScrollBar()->maximum()
+    qInfo() << "SCROLL VALUE IS: " << scroll;
+    forceRepaint();
+}
+
 void TrackControlsWidget::paintEvent(QPaintEvent*)
 {
     //better to put this into a subclass of QScrollArea? Or do it propperly? FIXME
     //we set the scroll bar to the bottom when we repaint the tracks
-    if (!_type)scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum());
+    if (_type == olive::VideoTrack){
+        scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum()+scroll);
+    } else {
+        scroll_area->verticalScrollBar()->setSliderPosition(scroll);
+    }
 }
 
 void TrackControlsWidget::forceRepaint()
 {
     update();
     repaint();
-    qInfo() << "doing a repaint of video track only";
 }
 
 
@@ -100,26 +116,33 @@ void TrackControlsWidget::update(){
         } else text = "A";
         int trackLimit = _type == olive::VideoTrack? video_track_limit : audio_track_limit+1;
 
-        if (track_box_layout->count()-1 == trackCount & trackCount != qAbs(trackLimit)){
+        //if track header is being added or taken away remove the padding & stretch widgets first
+        if (track_box_layout->count()-2 == trackCount & trackCount != qAbs(trackLimit)){
+            track_box_layout->removeWidget(track_box_layout->findChild<QWidget*>("padding"));
             track_box_layout->removeWidget(track_box_layout->itemAt(track_box_layout->count()-1)->widget());
         }
 
+        //add track header widgets untill they have all been added
         while (trackCount < qAbs(trackLimit)){
             track_control_boxes.push_back(new TrackControlsBox(QString(text+QString::number(trackCount+1))));
             track_control_boxes.at(trackCount)->setContentsMargins(0,0,0,0);
             track_box_layout->addWidget(track_control_boxes.at(trackCount));
             trackCount++;
         }
+        //reove track header widgets untill all removed
         while (trackCount > qAbs(trackLimit)){
             trackCount--;
             track_box_layout->removeWidget(track_control_boxes.at(trackCount));
             track_control_boxes.at(trackCount)->deleteLater();
             track_control_boxes.pop_back();
         }
+        //add back padding widget & stretch
         if(track_box_layout->count() == track_control_boxes.count()){
+        track_box_layout->addWidget(_padding);
         track_box_layout->addStretch(1);
         }
 
+        //set height of track header widgets
         for (int i = 0; i < track_control_boxes.count(); i++){
             track_box_layout->itemAt(i)->widget()->setMinimumHeight(panel_timeline->GetTrackHeight(_type? i: (i*-1)-1)+(_type?1:1));
     }
@@ -128,8 +151,6 @@ void TrackControlsWidget::update(){
     }else {
     setVisible(false);
     }
-
-//    repaint();
 }
 
 

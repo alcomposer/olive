@@ -40,8 +40,10 @@ private:
     QVBoxLayout* track_box_layout;
     QVBoxLayout* final_layout;
     QVector<TrackControlsBox*> track_control_boxes;
+    QWidget* _padding;
 public slots:
     void forceRepaint();
+    void setScroll(int value);
 };
 
 #endif // TRACKCONTROLSWIDGET_H
