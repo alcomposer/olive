@@ -128,7 +128,7 @@ void TrackControlsWidget::update(){
 
         //add track header widgets untill they have all been added
         while (trackCount < qAbs(trackLimit)){
-            track_control_boxes.push_back(new TrackControlsBox(QString(text+QString::number(trackCount+1))));
+            track_control_boxes.push_back(new TrackControlsBox(QString(text+QString::number(trackCount+1)),static_cast<bool>(_type)));
             track_control_boxes.at(trackCount)->setContentsMargins(0,0,0,0);
             track_box_layout->addWidget(track_control_boxes.at(trackCount));
             trackCount++;

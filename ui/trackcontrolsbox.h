@@ -13,14 +13,17 @@
 #include <QPainter>
 
 class Timeline;
+class TrackControlsWidget;
 
 class TrackControlsBox : public QWidget
 {
     Q_OBJECT
 public:
-    TrackControlsBox(QString text, QWidget* parent = nullptr);
+    TrackControlsBox(QString text, bool type, QWidget* parent = nullptr);
     ~TrackControlsBox();
     void paintEvent(QPaintEvent *);
+private:
+    bool track_type;
 };
 
 #endif // TRACKCONTROLSBOX_H

@@ -5,8 +5,10 @@
 #include <QPushButton>
 #include <QLineEdit>
 
-TrackControlsBox::TrackControlsBox(QString text, QWidget* parent) :
+
+TrackControlsBox::TrackControlsBox(QString text, bool type, QWidget* parent) :
     QWidget(parent)
+    ,track_type(type) //FIXME better to pass in a flag than this bool? Or anther way?
 {
     QLabel* test = new QLabel(text);
     test->setContentsMargins(0,0,0,0);
@@ -46,6 +48,12 @@ TrackControlsBox::~TrackControlsBox()
 void TrackControlsBox::paintEvent(QPaintEvent *)
 {
             QPainter p(this);
-            p.setPen(QColor(255,255,255,25));
-            p.drawRect(rect().x(), rect().y(), rect().width()-1, rect().height()-1);
+            p.setPen(QColor(0,0,0,96));
+            if (!track_type){
+                p.drawLine(0,0,width(),0);
+            } else {
+                p.drawLine(0,height()-2,width(),height()-2);
+                //FIXME manually moving the line to align, but buttons wont perfectly
+                //align, need to research more why the audio track headers are off by 2px
+            }
 }
