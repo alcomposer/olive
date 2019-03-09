@@ -18,7 +18,7 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
 
 {
     _padding = new QWidget();
-    _padding->setMinimumHeight(25); // FIXME hardcode for now, is this even correct value?
+    _padding->setMinimumHeight(50); // FIXME hardcode for now, is this even correct value?
     _padding->setContentsMargins(0,0,0,0);
     _padding->setObjectName("padding");
 
@@ -95,6 +95,7 @@ void TrackControlsWidget::resetScroll()
 void TrackControlsWidget::forceRepaint()
 {
     resetScroll();
+    update();
     QWidget::update();
 }
 

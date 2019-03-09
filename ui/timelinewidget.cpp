@@ -1515,10 +1515,13 @@ void TimelineWidget::mouseReleaseEvent(QMouseEvent *event) {
       pre_clips.clear();
       post_clips.clear();
 
+
       update_ui(true);
+
     }
     panel_timeline->hand_moving = false;
   }
+  emit resizingTracks();
 }
 
 void TimelineWidget::init_ghosts() {
@@ -2668,7 +2671,7 @@ void TimelineWidget::mouseMoveEvent(QMouseEvent *event) {
             track_resizing = true;
             track_target = hover_track;
             setCursor(Qt::SizeVerCursor);
-            //emit resizingTracks();
+
           }
         }
       }
