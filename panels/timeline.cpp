@@ -515,8 +515,6 @@ void Timeline::repaint_timeline() {
       video_track_controls->update();
       audio_track_controls->update();
 
-      qInfo() << "we are updating headers, video & audio area & controls";
-
       if (olive::ActiveSequence != nullptr
           && !zoom_just_changed) {
         set_sb_max();
@@ -2007,7 +2005,6 @@ void Timeline::setup_ui() {
   videoContainerLayout->addWidget(videoScrollbar);
 
   connect(videoScrollbar, SIGNAL(valueChanged(int)), video_track_controls, SLOT(setScroll(int)));
-  connect(videoScrollbar, SIGNAL(rangeChanged(int, int)), video_track_controls, SLOT(setRange(int,int)));
 
   splitter->addWidget(videoContainer);
 

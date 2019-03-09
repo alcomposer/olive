@@ -8,6 +8,7 @@
 class TrackControlsScrollArea : public QScrollArea
 {
     Q_OBJECT
+    void wheelEvent(QWheelEvent *) override;
 public:
     TrackControlsScrollArea(QWidget* parent = nullptr);
 };

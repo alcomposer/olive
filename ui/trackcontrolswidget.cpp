@@ -33,6 +33,7 @@ TrackControlsWidget::TrackControlsWidget(olive::tracktype type, QWidget* parent)
     scroll_area->setContentsMargins(0,0,0,0);
 
     track_box_layout = new QVBoxLayout();
+    track_box_layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     track_box_layout->setContentsMargins(0,0,0,0);
     track_box_layout->setSpacing(0);
 
@@ -60,16 +61,7 @@ TrackControlsWidget::~TrackControlsWidget()
 void TrackControlsWidget::setScroll(int value)
 {
     scroll = value;
-    //scroll_area->verticalScrollBar()->maximum()
-    qInfo() << "SCROLL VALUE IS: " << scroll;
     forceRepaint();
-}
-
-void TrackControlsWidget::setRange(int min, int max)
-{
-    qInfo() << "Scroll Range is now: "<< min << " : " << max;
-    scroll_max = max;
-    scroll_min = min;
 }
 
 void TrackControlsWidget::paintEvent(QPaintEvent*)
@@ -79,13 +71,7 @@ void TrackControlsWidget::paintEvent(QPaintEvent*)
 
 void TrackControlsWidget::resetScroll()
 {
-    //better to put this into a subclass of QScrollArea? Or do it propperly? FIXME
-    //we set the scroll bar to the bottom when we repaint the tracks
-
-
     if (_type == olive::VideoTrack){
-        //scroll_area->verticalScrollBar()->setMaximum(scroll_min);
-        //scroll_area->verticalScrollBar()->setMinimum(scroll_max);
         scroll_area->verticalScrollBar()->setSliderPosition(scroll_area->verticalScrollBar()->maximum()+scroll); //this inverts the video vertical scroll
     } else {
         scroll_area->verticalScrollBar()->setSliderPosition(scroll);
@@ -94,6 +80,7 @@ void TrackControlsWidget::resetScroll()
 
 void TrackControlsWidget::forceRepaint()
 {
+    //we could have used repaint(), but using that function can cause crashing if not used with great care
     resetScroll();
     update();
     QWidget::update();
@@ -153,7 +140,7 @@ void TrackControlsWidget::update(){
             track_control_boxes.at(trackCount)->deleteLater();
             track_control_boxes.pop_back();
         }
-        //add back padding widget & stretch
+        //add padding widget & stretch
         if(track_box_layout->count() == track_control_boxes.count()){
         track_box_layout->addWidget(_padding);
         track_box_layout->addStretch(1);

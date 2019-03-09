@@ -37,8 +37,6 @@ public:
 private:
     int scroll;
     int trackCount;
-    int scroll_max;
-    int scroll_min;
     olive::tracktype _type;
     QVBoxLayout* track_box_layout;
     QVBoxLayout* final_layout;
@@ -48,7 +46,6 @@ private:
 public slots:
     void forceRepaint();
     void setScroll(int value);
-    void setRange(int min, int max);
 };
 
 #endif // TRACKCONTROLSWIDGET_H
