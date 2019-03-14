@@ -58,6 +58,8 @@ Clip::Clip(SequencePtr s) :
   replaced = false;
   fbo = nullptr;
   open_ = false;
+  //if (this->media_stream()->timecode_source_start)
+  //timecode_start = this->media_stream()->timecode_source_start;
 
   reset();
 }

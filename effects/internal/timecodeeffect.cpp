@@ -51,8 +51,9 @@ TimecodeEffect::TimecodeEffect(Clip* c, const EffectMeta* em) :
 
   EffectRow* tc_row = add_row(tr("Timecode"));
   tc_select = tc_row->add_field(EFFECT_FIELD_COMBO, "tc_selector");
-  tc_select->add_combo_item(tr("Sequence"), true);
-  tc_select->add_combo_item(tr("Media"), false);
+  tc_select->add_combo_item(tr("Sequence"), olive::effect::sequence);
+  tc_select->add_combo_item(tr("Media"), olive::effect::media);
+  tc_select->add_combo_item(tr("Source"), olive::effect::source);
   tc_select->set_combo_index(0);
 
   scale_val = add_row(tr("Scale"))->add_field(EFFECT_FIELD_DOUBLE, "scale", 2);
@@ -80,11 +81,23 @@ TimecodeEffect::TimecodeEffect(Clip* c, const EffectMeta* em) :
 
 
 void TimecodeEffect::redraw(double timecode) {
-  if (tc_select->get_combo_data(timecode).toBool()){
-    display_timecode = prepend_text->get_string_value(timecode) + frame_to_timecode(olive::ActiveSequence->playhead, olive::CurrentConfig.timecode_view, olive::ActiveSequence->frame_rate);}
-  else {
-    double media_rate = parent_clip->media_frame_rate();
-    display_timecode = prepend_text->get_string_value(timecode) + frame_to_timecode(timecode * media_rate, olive::CurrentConfig.timecode_view, media_rate);}
+    qInfo() << " tc value: "<< tc_select->get_combo_data(timecode).toInt();
+    double media_rate;
+    double timecode_start;
+
+    switch (tc_select->get_combo_data(timecode).toInt()){
+        case olive::effect::sequence:
+            display_timecode = prepend_text->get_string_value(timecode) + frame_to_timecode(olive::ActiveSequence->playhead, olive::CurrentConfig.timecode_view, olive::ActiveSequence->frame_rate);
+            break;
+        case olive::effect::source:
+            media_rate = parent_clip->media_frame_rate();
+            timecode_start = timecode_to_frame(parent_clip->media()->to_footage()->timecode_source_start, olive::CurrentConfig.timecode_view, media_rate);
+            display_timecode = prepend_text->get_string_value(timecode) + frame_to_timecode((timecode_start+timecode), olive::CurrentConfig.timecode_view, media_rate);
+            break;
+        case olive::effect::media:
+            double media_rate = parent_clip->media_frame_rate();
+            display_timecode = prepend_text->get_string_value(timecode) + frame_to_timecode(timecode * media_rate, olive::CurrentConfig.timecode_view, media_rate);
+}
   img.fill(Qt::transparent);
 
   QPainter p(&img);

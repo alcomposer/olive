@@ -36,6 +36,7 @@
 #include <QSemaphore>
 #include <QFile>
 #include <QDir>
+#include <QtXml/QDomDocument>
 
 QSemaphore sem(5); // only 5 preview generators can run at one time
 
@@ -76,6 +77,7 @@ void PreviewGenerator::parse_media() {
       ms.file_index = i;
       ms.enabled = true;
       ms.infinite_length = false;
+      //ms.timecode_source_start = fmt_ctx_->start_time; //is this the right one?
 
       bool append = false;
 
@@ -132,6 +134,15 @@ void PreviewGenerator::parse_media() {
     }
   }
   footage_->length = fmt_ctx_->duration;
+  //is this the right one?
+
+  //fmt_ctx_->streams[0]->
+  AVDictionaryEntry *tag = NULL;
+  while(tag = av_dict_get(fmt_ctx_->streams[0]->metadata, "", tag,  AV_DICT_IGNORE_SUFFIX)){
+      if (!QString::compare(tag->key,"timecode"))
+          footage_->timecode_source_start = tag->value;
+      };
+
 
   if (fmt_ctx_->duration == INT64_MIN) {
     retrieve_duration_ = true;

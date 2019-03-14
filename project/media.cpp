@@ -183,6 +183,9 @@ void Media::update_tooltip(const QString& error) {
         }
         // tooltip += "\n";
       }
+      tooltip += "\n";
+
+      tooltip += QString("Timecode Start: " + f->timecode_source_start);
     } else {
       tooltip += error;
     }
