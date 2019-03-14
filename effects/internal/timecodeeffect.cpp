@@ -81,7 +81,6 @@ TimecodeEffect::TimecodeEffect(Clip* c, const EffectMeta* em) :
 
 
 void TimecodeEffect::redraw(double timecode) {
-    qInfo() << " tc value: "<< tc_select->get_combo_data(timecode).toInt();
     double media_rate;
     double timecode_start;
 
