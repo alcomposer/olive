@@ -112,10 +112,6 @@ public:
   const ClipSpeed& speed();
   void set_speed(const ClipSpeed& s);
 
-  //long source_timecode_start();
-  //void set_source_timecode_start();
-    QString timecode_start;
-
   AVRational time_base();
 
   void reset_audio();

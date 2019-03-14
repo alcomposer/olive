@@ -58,7 +58,6 @@ struct FootageStream {
   int audio_layout;
   int audio_frequency;
   bool enabled;
-  long timecode_source_start;
 
   // preview thumbnail/waveform
   bool preview_done;
