@@ -134,11 +134,17 @@ void PreviewGenerator::parse_media() {
   }
   footage_->length = fmt_ctx_->duration;
 
-  AVDictionaryEntry *tag = nullptr;
-  if( (tag = av_dict_get(fmt_ctx_->streams[0]->metadata, "timecode", tag,  AV_DICT_MATCH_CASE)) ){
-    footage_->timecode_source_start = tag->value;
-    };
 
+  //Loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
+  AVDictionaryEntry *tag = nullptr;
+  bool foundTimecode = false;
+  for (uint i = 0; i < fmt_ctx_->nb_streams; i++){
+    if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) ){
+      footage_->timecode_source_start = tag->value;
+      foundTimecode = true;
+      }
+    if (foundTimecode) break;
+  };
 
   if (fmt_ctx_->duration == INT64_MIN) {
     retrieve_duration_ = true;
