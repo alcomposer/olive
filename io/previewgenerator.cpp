@@ -136,7 +136,7 @@ void PreviewGenerator::parse_media() {
 
 
   //Loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
-  AVDictionaryEntry *tag = nullptr;
+  AVDictionaryEntry* tag = nullptr;
   bool foundTimecode = false;
   for (uint i = 0; i < fmt_ctx_->nb_streams; i++){
     if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) ){
