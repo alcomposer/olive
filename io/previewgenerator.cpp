@@ -67,65 +67,60 @@ PreviewGenerator::PreviewGenerator(Media* i) :
 
 void PreviewGenerator::parse_media() {
   // detect video/audio streams in file
+  bool append = false;
   for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
-    // Find the decoder for the video stream
-    if (avcodec_find_decoder(fmt_ctx_->streams[i]->codecpar->codec_id) == nullptr) {
-      qCritical() << "Unsupported codec in stream" << i << "of file" << footage_->name;
-    } else {
-      FootageStream ms;
-      ms.preview_done = false;
-      ms.file_index = i;
-      ms.enabled = true;
-      ms.infinite_length = false;
+  FootageStream ms;
 
-      bool append = false;
-      bool foundTimecode = false;
+  append = false;
 
-      if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO
-          && fmt_ctx_->streams[i]->codecpar->width > 0
-          && fmt_ctx_->streams[i]->codecpar->height > 0) {
 
-        // heuristic to determine if video is a still image (if it is, we treat it differently in the playback/render process)
-        if (fmt_ctx_->streams[i]->avg_frame_rate.den == 0
+  // Find the decoder for the video stream
+  if (avcodec_find_decoder(fmt_ctx_->streams[i]->codecpar->codec_id) == nullptr) {
+    qCritical() << "Unsupported codec in stream" << i << "of file" << footage_->name;
+  } else {
+    ms.preview_done = false;
+    ms.file_index = i;
+    ms.enabled = true;
+    ms.infinite_length = false;
+
+
+
+    if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO
+        && fmt_ctx_->streams[i]->codecpar->width > 0
+        && fmt_ctx_->streams[i]->codecpar->height > 0) {
+
+      // heuristic to determine if video is a still image (if it is, we treat it differently in the playback/render process)
+      if (fmt_ctx_->streams[i]->avg_frame_rate.den == 0
             && fmt_ctx_->streams[i]->codecpar->codec_id != AV_CODEC_ID_DNXHD) { // silly hack but this is the only scenario i've seen this
-          if (footage_->url.contains('%')) {
-            // must be an image sequence
-            ms.video_frame_rate = 25;
-          } else {
-            ms.infinite_length = true;
-            contains_still_image_ = true;
-            ms.video_frame_rate = 0;
-          }
-
+        if (footage_->url.contains('%')) {
+          // must be an image sequence
+          ms.video_frame_rate = 25;
         } else {
-          // using ffmpeg's built-in heuristic
-          ms.video_frame_rate = av_q2d(av_guess_frame_rate(fmt_ctx_, fmt_ctx_->streams[i], nullptr));
+          ms.infinite_length = true;
+          contains_still_image_ = true;
+          ms.video_frame_rate = 0;
         }
 
-        ms.video_width = fmt_ctx_->streams[i]->codecpar->width;
-        ms.video_height = fmt_ctx_->streams[i]->codecpar->height;
+      } else {
+        // using ffmpeg's built-in heuristic
+        ms.video_frame_rate = av_q2d(av_guess_frame_rate(fmt_ctx_, fmt_ctx_->streams[i], nullptr));
+      }
+
+      ms.video_width = fmt_ctx_->streams[i]->codecpar->width;
+      ms.video_height = fmt_ctx_->streams[i]->codecpar->height;
 
         // default value, we get the true value later in generate_waveform()
-        ms.video_auto_interlacing = VIDEO_PROGRESSIVE;
-        ms.video_interlacing = VIDEO_PROGRESSIVE;
+      ms.video_auto_interlacing = VIDEO_PROGRESSIVE;
+      ms.video_interlacing = VIDEO_PROGRESSIVE;
 
-        append = true;
-      } else if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+      append = true;
+    } else if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
         ms.audio_channels = fmt_ctx_->streams[i]->codecpar->channels;
         ms.audio_layout = int(fmt_ctx_->streams[i]->codecpar->channel_layout);
         ms.audio_frequency = fmt_ctx_->streams[i]->codecpar->sample_rate;
 
         append = true;
       }
-
-      //Loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
-      AVDictionaryEntry* tag = nullptr;
-        if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) && !foundTimecode){
-          ms.timecode_source_start = tag->value;
-          foundTimecode = true;
-          qInfo() << "First found timecode for: " << fmt_ctx_->filename << " In stream: " << i;
-          }
-
       if (append) {
         QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
               footage_->audio_tracks : footage_->video_tracks;
@@ -141,6 +136,35 @@ void PreviewGenerator::parse_media() {
       }
     }
   }
+
+  //loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
+    QString foundTimecodeValue;
+    AVDictionaryEntry* tag = nullptr;
+    bool foundTimecode = false;
+    for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
+      if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) && !foundTimecode) {
+        foundTimecodeValue = tag->value;
+        foundTimecode = true;
+        qInfo() << "First found timecode for: " << fmt_ctx_->filename << " In stream: " << i << "with time: " << tag->value;
+      }
+    //if we don't find any timecode, set the timecode string to error - safe to do so as when reading timecode later
+    //any incorrectly formatted timecode value = 0
+      if (!foundTimecode) foundTimecodeValue = tr("Not Found");
+    }
+    //loop over all streams again, this time setting all audio and video streams to the found timecode value
+    //timecode metadata value can come from video, audio or data stream
+    for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
+      QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
+          footage_->audio_tracks : footage_->video_tracks;
+
+    for (int j=0;j<stream_list.size();j++) {
+      if (stream_list.at(j).file_index == i) {
+        stream_list[j].timecode_source_start = foundTimecodeValue;
+        append = false;
+      }
+    }
+  }
+
   footage_->length = fmt_ctx_->duration;
 
   if (fmt_ctx_->duration == INT64_MIN) {
