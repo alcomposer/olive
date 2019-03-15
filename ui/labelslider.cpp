@@ -35,6 +35,7 @@ LabelSlider::LabelSlider(QWidget* parent) :
   QLabel(parent)
   ,timecode_offset(0)
   ,_togAct(new QAction(tr("Source Timecode")))
+  ,display_source_timecode(false)
 {
   // set a default frame rate - fallback, shouldn't ever really be used
   frame_rate = 30;
@@ -97,7 +98,7 @@ QString LabelSlider::valueToString() {
   } else {
     switch (display_type) {
     case LABELSLIDER_FRAMENUMBER:
-      return frame_to_timecode(long(v)+ display_source_timecode? timecode_offset:0, olive::CurrentConfig.timecode_view, frame_rate);
+      return frame_to_timecode(long(v) + (display_source_timecode ? timecode_offset:0), olive::CurrentConfig.timecode_view, frame_rate);
     case LABELSLIDER_PERCENT:
       return QString::number((v*100), 'f', decimal_places).append("%");
     case LABELSLIDER_DECIBEL:
