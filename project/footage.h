@@ -58,6 +58,8 @@ struct FootageStream {
   int audio_layout;
   int audio_frequency;
   bool enabled;
+  QString timecode_source_start;
+  double frame_rate;
 
   // preview thumbnail/waveform
   bool preview_done;
@@ -83,8 +85,6 @@ struct Footage {
   double speed;
   bool alpha_is_premultiplied;
   int start_number;
-  QString timecode_source_start;
-  double frame_rate;
 
   // proxy config
   bool proxy;

@@ -93,7 +93,7 @@ void TimecodeEffect::redraw(double timecode) {
       //source media is media
       if(parent_clip->media()){
         media_rate = parent_clip->media_frame_rate();
-        timecode_start = timecode_to_frame(parent_clip->media()->to_footage()->timecode_source_start, olive::CurrentConfig.timecode_view, media_rate);
+        timecode_start = timecode_to_frame(parent_clip->media()->to_footage()->video_tracks.at(0).timecode_source_start, olive::CurrentConfig.timecode_view, media_rate);
         display_timecode = prepend_text->get_string_value(timecode) + frame_to_timecode((timecode * media_rate) + timecode_start, olive::CurrentConfig.timecode_view, media_rate);
         break;
       }

@@ -135,7 +135,8 @@ void LabelSlider::set_color(QString c) {
 
 void LabelSlider::set_timecode_offset(long offset)
 {
-    timecode_offset = offset;
+  timecode_offset = offset;
+  internal_value = offset;
 }
 
 double LabelSlider::value() {

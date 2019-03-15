@@ -738,12 +738,13 @@ void Viewer::set_media(Media* m) {
       // FIXME: Move this magic number to Config
       seq->frame_rate = 30;
 
-      current_timecode_slider->set_timecode_offset(timecode_to_frame(footage->timecode_source_start, olive::CurrentConfig.timecode_view, footage->frame_rate));
-
       if (footage->video_tracks.size() > 0) {
         const FootageStream& video_stream = footage->video_tracks.at(0);
         seq->width = video_stream.video_width;
         seq->height = video_stream.video_height;
+
+        current_timecode_slider->set_timecode_offset(timecode_to_frame(video_stream.timecode_source_start, olive::CurrentConfig.timecode_view, video_stream.video_frame_rate));
+
         if (video_stream.video_frame_rate > 0 && !video_stream.infinite_length) seq->frame_rate = video_stream.video_frame_rate * footage->speed;
 
         ClipPtr c = std::make_shared<Clip>(seq);

@@ -185,7 +185,9 @@ void Media::update_tooltip(const QString& error) {
       }
       tooltip += "\n";
 
-      tooltip += QString("Timecode Start: " + f->timecode_source_start);
+       for (int i=0;i<f->video_tracks.size();i++) {
+      tooltip += QString("Timecode Start: " + f->video_tracks.at(i).timecode_source_start);
+    }
     } else {
       tooltip += error;
     }

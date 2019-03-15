@@ -1,4 +1,4 @@
-/***
+﻿/***
 
     Olive - Non-Linear Video Editor
     Copyright (C) 2019  Olive Team
@@ -79,6 +79,7 @@ void PreviewGenerator::parse_media() {
       ms.infinite_length = false;
 
       bool append = false;
+      bool foundTimecode = false;
 
       if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO
           && fmt_ctx_->streams[i]->codecpar->width > 0
@@ -99,7 +100,6 @@ void PreviewGenerator::parse_media() {
         } else {
           // using ffmpeg's built-in heuristic
           ms.video_frame_rate = av_q2d(av_guess_frame_rate(fmt_ctx_, fmt_ctx_->streams[i], nullptr));
-          footage_->frame_rate = ms.video_frame_rate;
         }
 
         ms.video_width = fmt_ctx_->streams[i]->codecpar->width;
@@ -118,6 +118,14 @@ void PreviewGenerator::parse_media() {
         append = true;
       }
 
+      //Loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
+      AVDictionaryEntry* tag = nullptr;
+        if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) && !foundTimecode){
+          ms.timecode_source_start = tag->value;
+          foundTimecode = true;
+          qInfo() << "First found timecode for: " << fmt_ctx_->filename << " In stream: " << i;
+          }
+
       if (append) {
         QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
               footage_->audio_tracks : footage_->video_tracks;
@@ -134,18 +142,6 @@ void PreviewGenerator::parse_media() {
     }
   }
   footage_->length = fmt_ctx_->duration;
-
-
-  //Loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
-  AVDictionaryEntry* tag = nullptr;
-  bool foundTimecode = false;
-  for (uint i = 0; i < fmt_ctx_->nb_streams; i++){
-    if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) ){
-      footage_->timecode_source_start = tag->value;
-      foundTimecode = true;
-      }
-    if (foundTimecode) break;
-  };
 
   if (fmt_ctx_->duration == INT64_MIN) {
     retrieve_duration_ = true;
