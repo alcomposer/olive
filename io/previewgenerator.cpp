@@ -99,6 +99,7 @@ void PreviewGenerator::parse_media() {
         } else {
           // using ffmpeg's built-in heuristic
           ms.video_frame_rate = av_q2d(av_guess_frame_rate(fmt_ctx_, fmt_ctx_->streams[i], nullptr));
+          footage_->frame_rate = ms.video_frame_rate;
         }
 
         ms.video_width = fmt_ctx_->streams[i]->codecpar->width;

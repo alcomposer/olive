@@ -84,6 +84,7 @@ struct Footage {
   bool alpha_is_premultiplied;
   int start_number;
   QString timecode_source_start;
+  double frame_rate;
 
   // proxy config
   bool proxy;
