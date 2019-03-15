@@ -34,6 +34,7 @@
 LabelSlider::LabelSlider(QWidget* parent) :
   QLabel(parent)
   ,timecode_offset(0)
+  ,_togAct(new QAction(tr("Source Timecode")))
 {
   // set a default frame rate - fallback, shouldn't ever really be used
   frame_rate = 30;
@@ -48,6 +49,7 @@ LabelSlider::LabelSlider(QWidget* parent) :
   internal_value = -1;
   set = false;
   display_type = LABELSLIDER_NORMAL;
+  _togAct->setCheckable(true);
 
   set_default_value(0);
 
@@ -95,7 +97,7 @@ QString LabelSlider::valueToString() {
   } else {
     switch (display_type) {
     case LABELSLIDER_FRAMENUMBER:
-      return frame_to_timecode(long(v)+timecode_offset, olive::CurrentConfig.timecode_view, frame_rate);
+      return frame_to_timecode(long(v)+ display_source_timecode? timecode_offset:0, olive::CurrentConfig.timecode_view, frame_rate);
     case LABELSLIDER_PERCENT:
       return QString::number((v*100), 'f', decimal_places).append("%");
     case LABELSLIDER_DECIBEL:
@@ -284,6 +286,10 @@ void LabelSlider::show_context_menu(const QPoint &pos)
 
   menu.addAction(tr("&Reset to Default"), this, SLOT(reset_to_default_value()));
 
+  if (parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() == "footage_viewer"){ //FIXME better way to get object name?
+    menu.addAction(_togAct);
+    connect(_togAct, &QAction::toggled, this, &LabelSlider::toggle_source_timecode);
+  }
   menu.exec(mapToGlobal(pos));
 }
 
@@ -377,4 +383,10 @@ void LabelSlider::prompt_for_value()
     set_previous_value();
     set_value(d, true);
   }
+}
+
+void LabelSlider::toggle_source_timecode(bool set)
+{
+    display_source_timecode = set ? true : false;
+    setText(valueToString());
 }

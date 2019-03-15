@@ -218,6 +218,9 @@ private:
 
   long timecode_offset;
 
+  bool display_source_timecode;
+  QAction* _togAct;
+
   /**
      * @brief Internal function to set the standard cursor (usually SizeHorCursor)
      */
@@ -250,6 +253,8 @@ private slots:
    * display type and converts them back to the internal value type.
    */
   void prompt_for_value();
+
+  void toggle_source_timecode(bool set);
 signals:
   /**
      * @brief valueChanged signal
