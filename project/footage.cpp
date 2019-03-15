@@ -37,6 +37,7 @@ Footage::Footage() {
   alpha_is_premultiplied = (false);
   proxy = (false);
   start_number = 0;
+  timecode_source_start = QString("No Timecode");
 
 	ready_lock.lock();
 }
