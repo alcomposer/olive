@@ -138,24 +138,24 @@ void PreviewGenerator::parse_media() {
   }
 
   //loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
-    QString foundTimecodeValue;
-    AVDictionaryEntry* tag = nullptr;
-    bool foundTimecode = false;
-    for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
-      if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) && !foundTimecode) {
-        foundTimecodeValue = tag->value;
-        foundTimecode = true;
-        qInfo() << "First found timecode for: " << fmt_ctx_->filename << " In stream: " << i << "with time: " << tag->value;
-      }
+  QString foundTimecodeValue;
+  AVDictionaryEntry* tag = nullptr;
+  bool foundTimecode = false;
+  for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
+    if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) && !foundTimecode) {
+      foundTimecodeValue = tag->value;
+      foundTimecode = true;
+      qInfo() << "First found timecode for: " << fmt_ctx_->filename << " In stream: " << i << "with time: " << tag->value;
+    }
     //if we don't find any timecode, set the timecode string to error - safe to do so as when reading timecode later
     //any incorrectly formatted timecode value = 0
-      if (!foundTimecode) foundTimecodeValue = tr("Not Found");
-    }
-    //loop over all streams again, this time setting all audio and video streams to the found timecode value
-    //timecode metadata value can come from video, audio or data stream
-    for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
-      QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
-          footage_->audio_tracks : footage_->video_tracks;
+    if (!foundTimecode) foundTimecodeValue = tr("Not Found");
+  }
+  //loop over all streams again, this time setting all audio and video streams to the found timecode value
+  //timecode metadata value can come from video, audio or data stream
+  for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
+    QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
+        footage_->audio_tracks : footage_->video_tracks;
 
     for (int j=0;j<stream_list.size();j++) {
       if (stream_list.at(j).file_index == i) {

@@ -90,7 +90,7 @@ void TimecodeEffect::redraw(double timecode) {
       break;
     case olive::effect::source:
       //if parent_clip has no media, then we are in a generator and don't have source media
-      //source media is media
+      //fallthrough to media case
       if(parent_clip->media()){
         media_rate = parent_clip->media_frame_rate();
         timecode_start = timecode_to_frame(parent_clip->media()->to_footage()->video_tracks.at(0).timecode_source_start, olive::CurrentConfig.timecode_view, media_rate);
