@@ -738,6 +738,8 @@ void Viewer::set_media(Media* m) {
       // FIXME: Move this magic number to Config
       seq->frame_rate = 30;
 
+      current_timecode_slider->set_timecode_offset(timecode_to_frame(footage->timecode_source_start, olive::CurrentConfig.timecode_view, 25));
+
       if (footage->video_tracks.size() > 0) {
         const FootageStream& video_stream = footage->video_tracks.at(0);
         seq->width = video_stream.video_width;

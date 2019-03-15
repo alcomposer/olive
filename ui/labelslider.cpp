@@ -31,7 +31,10 @@
 #include <QApplication>
 #include <QMenu>
 
-LabelSlider::LabelSlider(QWidget* parent) : QLabel(parent) {
+LabelSlider::LabelSlider(QWidget* parent) :
+  QLabel(parent)
+  ,timecode_offset(0)
+{
   // set a default frame rate - fallback, shouldn't ever really be used
   frame_rate = 30;
 
@@ -92,7 +95,7 @@ QString LabelSlider::valueToString() {
   } else {
     switch (display_type) {
     case LABELSLIDER_FRAMENUMBER:
-      return frame_to_timecode(long(v), olive::CurrentConfig.timecode_view, frame_rate);
+      return frame_to_timecode(long(v)+timecode_offset, olive::CurrentConfig.timecode_view, frame_rate);
     case LABELSLIDER_PERCENT:
       return QString::number((v*100), 'f', decimal_places).append("%");
     case LABELSLIDER_DECIBEL:
@@ -128,6 +131,11 @@ void LabelSlider::set_previous_value() {
 void LabelSlider::set_color(QString c) {
   if (c.isEmpty()) c = "#ffc000";
   setStyleSheet("QLabel{color:" + c + ";text-decoration:underline;}QLabel:disabled{color:#808080;}");
+}
+
+void LabelSlider::set_timecode_offset(long offset)
+{
+    timecode_offset = offset;
 }
 
 double LabelSlider::value() {

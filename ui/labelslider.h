@@ -183,6 +183,13 @@ public:
      * Defaults to 1
      */
   int decimal_places;
+
+  /**
+  * @brief Set the offset of the displayed timecode
+  *
+  * Defaults to 1
+  */
+  void set_timecode_offset(long offset);
 protected:
   void mousePressEvent(QMouseEvent *ev);
   void mouseMoveEvent(QMouseEvent *ev);
@@ -208,6 +215,8 @@ private:
   int display_type;
 
   double frame_rate;
+
+  long timecode_offset;
 
   /**
      * @brief Internal function to set the standard cursor (usually SizeHorCursor)
