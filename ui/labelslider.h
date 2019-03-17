@@ -146,6 +146,13 @@ public slots:
    */
   void SetMaximum(double v);
 
+  /**
+  * @brief Set the offset of the displayed timecode
+  *
+  * Defaults to 1
+  */
+  void set_timecode_offset(long offset);
+
 protected:
   void mousePressEvent(QMouseEvent *ev);
   void mouseMoveEvent(QMouseEvent *ev);
@@ -180,6 +187,11 @@ private:
 
   double frame_rate;
 
+  long timecode_offset;
+
+  bool display_source_timecode;
+  QAction* tog_timecodeAct;
+
   /**
    * @brief Internal function to set the standard cursor (usually SizeHorCursor)
    */
@@ -212,6 +224,8 @@ private slots:
    * display type and converts them back to the internal value type.
    */
   void ShowDialog();
+
+  void toggle_source_timecode(bool set);
 signals:
   /**
    * @brief valueChanged signal

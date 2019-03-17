@@ -336,7 +336,7 @@ mac {
 
 unix:!mac {
     CONFIG += link_pkgconfig
-    PKGCONFIG += libavutil libavformat libavcodec libavfilter libswscale libswresample
+    PKGCONFIG += libavutil libavformat libavcodec libavfilter libswscale libswresample ltc
 }
 unix:!mac:!haiku {
     LIBS += -ldl

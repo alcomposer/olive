@@ -52,6 +52,7 @@ private:
   void invalidate_media(const QString& error_msg);
   QString get_thumbnail_path(const QString &hash, const FootageStream &ms);
   QString get_waveform_path(const QString& hash, const FootageStream &ms);
+  bool findTimecodeLTC(int streamIndex, QString* ret_timecode);
 
   AVFormatContext* fmt_ctx_;
   Media* media_;
@@ -60,6 +61,7 @@ private:
   bool contains_still_image_;
   bool cancelled_;
   QDir data_dir_;
+  bool append_;
 };
 
 #endif // PREVIEWGENERATOR_H

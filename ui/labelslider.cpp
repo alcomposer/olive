@@ -33,7 +33,12 @@
 #include "ui/styling.h"
 #include "ui/menu.h"
 
-LabelSlider::LabelSlider(QWidget* parent) : QLabel(parent) {
+LabelSlider::LabelSlider(QWidget* parent) :
+   QLabel(parent)
+  ,timecode_offset(0)
+  ,tog_timecodeAct(new QAction(tr("Source Timecode")))
+  ,display_source_timecode(false)
+{
   // set a default frame rate - fallback, shouldn't ever really be used
   frame_rate = 30;
 
@@ -47,6 +52,7 @@ LabelSlider::LabelSlider(QWidget* parent) : QLabel(parent) {
   internal_value = -1;
   set = false;
   display_type = Normal;
+  tog_timecodeAct->setCheckable(true);
 
   SetDefault(0);
 
@@ -94,7 +100,7 @@ QString LabelSlider::ValueToString() {
   } else {
     switch (display_type) {
     case FrameNumber:
-      return frame_to_timecode(long(v), olive::CurrentConfig.timecode_view, frame_rate);
+      return frame_to_timecode(long(v)+ (display_source_timecode ? timecode_offset:0), olive::CurrentConfig.timecode_view, frame_rate);
     case Percent:
       return QString::number((v*100), 'f', decimal_places).append("%");
     case Decibel:
@@ -133,6 +139,13 @@ void LabelSlider::SetColor(QString c) {
 
 double LabelSlider::value() {
   return internal_value;
+}
+
+void LabelSlider::set_timecode_offset(long offset)
+{
+  timecode_offset = offset;
+  internal_value = offset;
+  setText(ValueToString());
 }
 
 void LabelSlider::SetDefault(double v) {
@@ -274,6 +287,11 @@ void LabelSlider::ShowContextMenu(const QPoint &pos)
 
   menu.addAction(tr("&Reset to Default"), this, SLOT(ResetToDefault()));
 
+  if (parentWidget()->parentWidget()->parentWidget()->parentWidget()->objectName() == "footage_viewer"){ //FIXME better way to get object name?
+    menu.addAction(tog_timecodeAct);
+    connect(tog_timecodeAct, &QAction::toggled, this, &LabelSlider::toggle_source_timecode);
+  }
+
   menu.exec(mapToGlobal(pos));
 }
 
@@ -365,4 +383,10 @@ void LabelSlider::ShowDialog()
     SetValue(d);
     emit valueChanged(internal_value);
   }
+}
+
+void LabelSlider::toggle_source_timecode(bool set)
+{
+    display_source_timecode = set ? true : false;
+    setText(ValueToString());
 }

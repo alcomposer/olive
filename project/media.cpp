@@ -179,6 +179,21 @@ void Media::update_tooltip(const QString& error) {
         }
         // tooltip += "\n";
       }
+      tooltip += "\n";
+      for (int i=0;i<f->video_tracks.size();i++) {
+        tooltip += QString("Timecode Metadata: " + f->video_tracks.at(i).timecode_source_start);
+        tooltip += "\n";
+        tooltip += QString("Timecode LTC: " + f->video_tracks.at(i).timecode_ltc_source_start);
+        tooltip += "\n";
+      }
+      for (int i=0;i<f->audio_tracks.size();i++){
+        if (f->audio_tracks.size() > 0){
+          tooltip += QString(QString("Audio Track: ") + QString::number(i+1) + QString(" Timecode Metadata: ") + f->audio_tracks.at(i).timecode_source_start);
+          tooltip += "\n";
+          tooltip += QString(QString("Audio Track: ") + QString::number(i+1) + QString(" Timecode LTC: ") + f->audio_tracks.at(i).timecode_ltc_source_start);
+          tooltip += "\n";
+        }
+      }
     } else {
       tooltip += error;
     }

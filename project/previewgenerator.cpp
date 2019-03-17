@@ -1,4 +1,4 @@
-/***
+﻿/***
 
     Olive - Non-Linear Video Editor
     Copyright (C) 2019  Olive Team
@@ -36,6 +36,12 @@
 #include <QSemaphore>
 #include <QFile>
 #include <QDir>
+
+extern "C" {
+#include <ltc.h>
+}
+
+#define BUFFER_SIZE (1924)
 
 QSemaphore sem(5); // only 5 preview generators can run at one time
 
@@ -77,7 +83,7 @@ void PreviewGenerator::parse_media() {
       ms.enabled = true;
       ms.infinite_length = false;
 
-      bool append = false;
+      append_ = false;
 
       if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO
           && fmt_ctx_->streams[i]->codecpar->width > 0
@@ -107,30 +113,65 @@ void PreviewGenerator::parse_media() {
         ms.video_auto_interlacing = VIDEO_PROGRESSIVE;
         ms.video_interlacing = VIDEO_PROGRESSIVE;
 
-        append = true;
+        append_ = true;
       } else if (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
         ms.audio_channels = fmt_ctx_->streams[i]->codecpar->channels;
         ms.audio_layout = int(fmt_ctx_->streams[i]->codecpar->channel_layout);
         ms.audio_frequency = fmt_ctx_->streams[i]->codecpar->sample_rate;
 
-        append = true;
+        append_ = true;
       }
 
-      if (append) {
+      if (append_) {
         QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
               footage_->audio_tracks : footage_->video_tracks;
 
         for (int j=0;j<stream_list.size();j++) {
           if (stream_list.at(j).file_index == i) {
             stream_list[j] = ms;
-            append = false;
+            append_ = false;
           }
         }
 
-        if (append) stream_list.append(ms);
+        if (append_) stream_list.append(ms);
       }
     }
   }
+  //loop over all streams to find timecode metadata. Timecode can be tag in any stream, including additional `data` stream
+  QString foundTimecodeValue = tr("Not Present");
+  QString foundTimecodeLTCValue = tr("Not Present");
+  AVDictionaryEntry* tag = nullptr;
+  bool foundTimecode = false;
+  bool foundTimecodeLTC = false;
+  for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
+    if( (tag = av_dict_get(fmt_ctx_->streams[i]->metadata, "timecode", nullptr,  AV_DICT_MATCH_CASE)) && !foundTimecode) {
+      foundTimecodeValue = tag->value;
+      foundTimecode = true;
+      qInfo() << "First found timecode for: " << fmt_ctx_->filename << " In stream: " << i << "with time: " << tag->value;
+    }
+  }
+  //loop over all streams to find LTC timecode. Use first found timecode
+  for (int i=0;i<int(fmt_ctx_->nb_streams);i++){
+    if(fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO){
+      foundTimecodeLTC = findTimecodeLTC(i, &foundTimecodeLTCValue);
+    }
+    if (foundTimecodeLTC) break;
+  }
+  //loop over all streams again, this time setting all audio and video streams to the found timecode value
+  //timecode metadata value can come from video, audio or data stream
+  for (int i=0;i<int(fmt_ctx_->nb_streams);i++) {
+    QVector<FootageStream>& stream_list = (fmt_ctx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) ?
+        footage_->audio_tracks : footage_->video_tracks;
+
+    for (int j=0;j<stream_list.size();j++) {
+      if (stream_list.at(j).file_index == i) {
+        stream_list[j].timecode_source_start = foundTimecodeValue;
+        stream_list[j].timecode_ltc_source_start = foundTimecodeLTCValue;
+        append_ = false;
+      }
+    }
+  }
+
   footage_->length = fmt_ctx_->duration;
 
   if (fmt_ctx_->duration == INT64_MIN) {
@@ -138,6 +179,125 @@ void PreviewGenerator::parse_media() {
   } else {
     finalize_media();
   }
+}
+
+bool PreviewGenerator::findTimecodeLTC(int streamIndex, QString* ret_timecode) {
+  SwrContext* swr_ctx;
+
+  //setup libLTC
+  LTCDecoder *decoder;
+  LTCFrameExt frameLTC;
+  bool foundTimecodeLTC = false;
+
+  if (fmt_ctx_->streams[streamIndex]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+
+    AVCodecParameters* codecSettings = fmt_ctx_->streams[streamIndex]->codecpar;
+    AVCodec* codec = avcodec_find_decoder(codecSettings->codec_id);
+
+
+    if (codec != nullptr){
+      AVCodecContext * pCodecContext = avcodec_alloc_context3(codec);
+      if (avcodec_parameters_to_context(pCodecContext, codecSettings)< 0){
+        qInfo() << "failed to create avcodec context";
+      };
+
+      if (avcodec_open2(pCodecContext, codec, nullptr)<0){
+        qInfo() << "failded to open decoder for stream " << streamIndex;
+      };
+
+      AVFrame* temp_frame = av_frame_alloc();
+
+      if(!temp_frame){
+        qInfo() << "Error allocating the frame";
+        return false;
+      }
+      //if channel_layout is not set fix this up here
+      if (pCodecContext->channel_layout == 0) {
+        pCodecContext->channel_layout = av_get_default_channel_layout(fmt_ctx_->streams[streamIndex]->codecpar->channels);
+      }
+      //setup the format of what we want to convert to
+      temp_frame->channels = pCodecContext->channels;
+      temp_frame->channel_layout = pCodecContext->channel_layout;
+      temp_frame->sample_rate = pCodecContext->sample_rate;
+      temp_frame->format = AV_SAMPLE_FMT_U8P; //set to unsigned, 8bit planar
+
+      //setup the resampler with in/out options
+      swr_ctx = swr_alloc_set_opts(
+              nullptr,
+              pCodecContext->channel_layout,
+              static_cast<AVSampleFormat>(AV_SAMPLE_FMT_U8P),
+              pCodecContext->sample_rate,
+              pCodecContext->channel_layout,
+              static_cast<AVSampleFormat>(codecSettings->format),
+              pCodecContext->sample_rate,
+              0,
+              nullptr
+              );
+
+      swr_init(swr_ctx);
+      if (!swr_is_initialized(swr_ctx)){
+        qInfo() << "Resampler has not been properly initialized";
+        return false;
+      }
+      AVPacket* packet = av_packet_alloc();
+      AVFrame* frame = av_frame_alloc();
+      if (!frame)qInfo() << "error allocating frame";
+
+      //LIBLTC
+      int apv = pCodecContext->sample_rate / 25;//LibLTC will discover framerate after first correct read
+      decoder = ltc_decoder_create(apv, 32);
+      int count = 0;
+      int numTries = 0;
+      int sample_size = 0;
+      ulong nb_bytes = 0;
+
+      while((av_read_frame(fmt_ctx_, packet))>=0 && !foundTimecodeLTC && numTries < 10){
+        ++numTries;
+        avcodec_send_packet(pCodecContext, packet);
+        avcodec_receive_frame(pCodecContext, frame);
+
+        swr_convert_frame(swr_ctx, temp_frame,frame);
+
+        sample_size = av_get_bytes_per_sample(static_cast<AVSampleFormat>(temp_frame->format));
+        nb_bytes = static_cast<ulong>(temp_frame->nb_samples * sample_size);
+
+        qInfo() << "processing chunk, with size: " << nb_bytes;
+
+        ltc_decoder_write(decoder, temp_frame->data[streamIndex], nb_bytes, count);
+
+        while(ltc_decoder_read(decoder, &frameLTC) && !foundTimecodeLTC){
+          foundTimecodeLTC = true;
+          SMPTETimecode stime;
+
+          ltc_frame_to_time(&stime, &frameLTC.ltc, 1);
+
+
+          *ret_timecode = QString(QString("%2").arg(stime.hours, 2, 10, QChar('0')) + QString(":")
+                                + QString("%2").arg(stime.mins,  2, 10, QChar('0')) + QString(":")
+                                + QString("%2").arg(stime.secs,  2, 10, QChar('0')) + QString(":")
+                                + QString("%2").arg(stime.frame, 2, 10, QChar('0')));
+
+          qInfo() << "TIMECODE:"
+                  << stime.hours << ":"
+                  << stime.mins << ":"
+                  << stime.secs << ":"
+                  << stime.frame
+                  << " found at: "
+                  << frameLTC.off_start;
+        }
+        count += nb_bytes;
+        if (!foundTimecodeLTC){
+          av_packet_unref(packet);
+        }
+      }
+      av_frame_free(&temp_frame);
+      av_packet_free(&packet);
+      ltc_decoder_free(decoder);
+    }
+  }
+  if (foundTimecodeLTC) {
+    return true;
+  }else return false;
 }
 
 bool PreviewGenerator::retrieve_preview(const QString& hash) {

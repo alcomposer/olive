@@ -58,6 +58,8 @@ struct FootageStream {
   int audio_layout;
   int audio_frequency;
   bool enabled;
+  QString timecode_source_start;
+  QString timecode_ltc_source_start;
 
   // preview thumbnail/waveform
   bool preview_done;
