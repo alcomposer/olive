@@ -328,6 +328,7 @@ void PreferencesDialog::accept() {
           );
     return;
   }
+  olive::CurrentConfig.user_effect_path = effect_path->text();
 
   // Validate whether the chosen OCIO configuration file
   if (enable_color_management->isChecked()) {
@@ -683,6 +684,14 @@ void PreferencesDialog::browse_ocio_config()
   if (!fn.isEmpty()) {
     ocio_config_file->setText(fn);
     enable_color_management->setChecked(true);
+  }
+}
+
+void PreferencesDialog::browse_effect_path()
+{
+  QString fn = QFileDialog::getExistingDirectory(this, tr("Browse for User Effects folder"));
+  if (!fn.isEmpty()) {
+    effect_path->setText(fn);
   }
 }
 
@@ -1194,4 +1203,25 @@ void PreferencesDialog::setup_ui() {
 
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+  // Paths
+
+  QWidget* paths_tab = new QWidget(this);
+
+  QGridLayout* paths_layout = new QGridLayout(paths_tab);
+  effect_path = new QLineEdit(paths_tab);
+  effect_path->setText(olive::CurrentConfig.user_effect_path);
+
+  QLabel* effect_path_text = new QLabel(tr("User Effects Path:"), paths_tab);
+
+  QPushButton* effect_path_search = new QPushButton(tr("Browse"), paths_tab);
+
+  paths_layout->addWidget(effect_path_text, 0, 0, 1, 1);
+  paths_layout->addWidget(effect_path, 0, 1, 1, 1);
+  paths_layout->addWidget(effect_path_search, 0, 2, 1, 1);
+  connect(effect_path_search, SIGNAL(clicked(bool)), this, SLOT(browse_effect_path()));
+
+  paths_tab->setLayout(paths_layout);
+
+  tabWidget->addTab(paths_tab, tr("Paths"));
 }

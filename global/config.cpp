@@ -270,6 +270,9 @@ void Config::load(QString path) {
         } else if (stream.name() == "DontUseProxiesOnExport") {
           stream.readNext();
           dont_use_proxies_on_export = (stream.text() == "1");
+        } else if (stream.name() == "UserEffectPath") {
+          stream.readNext();
+          user_effect_path = stream.text().toString();
         }
       }
     }
@@ -353,6 +356,7 @@ void Config::save(QString path) {
   stream.writeTextElement("PlaybackBitDepth", QString::number(playback_bit_depth));
   stream.writeTextElement("ExportBitDepth", QString::number(export_bit_depth));
   stream.writeTextElement("DontUseProxiesOnExport", QString::number(dont_use_proxies_on_export));
+  stream.writeTextElement("UserEffectPath", user_effect_path);
 
   stream.writeEndElement(); // configuration
   stream.writeEndDocument(); // doc

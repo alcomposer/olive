@@ -26,6 +26,7 @@
 #include <QCryptographicHash>
 #include <QDateTime>
 
+#include "config.h"
 #include "debug.h"
 
 QString get_app_path() {
@@ -78,6 +79,10 @@ QList<QString> get_effects_paths() {
 
   // folder in share folder - best for Linux
   effects_paths.append(app_dir.filePath("../share/olive-editor/effects"));
+
+  // user effects folder config
+  effects_paths.append(olive::CurrentConfig.user_effect_path);
+  qInfo() << "setting user path to: " << olive::CurrentConfig.user_effect_path;
 
   // Olive will also accept a manually provided folder with an environment variable
   QString env_path(qgetenv("OLIVE_EFFECTS_PATH"));

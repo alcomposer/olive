@@ -615,6 +615,8 @@ struct Config {
    */
   bool dont_use_proxies_on_export;
 
+  QString user_effect_path;
+
   /**
    * @brief Load config from file
    *

@@ -132,6 +132,7 @@ private slots:
    */
   void edit_default_sequence_settings();
 
+  void browse_effect_path();
 private:
 
   /**
@@ -270,6 +271,8 @@ private:
   QComboBox* ocio_look;
   QComboBox* playback_bit_depth;
   QComboBox* export_bit_depth;
+
+  QLineEdit* effect_path;
 
   /**
    * @brief UI widget for selecting the current UI style
