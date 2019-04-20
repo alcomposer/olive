@@ -636,7 +636,11 @@ void ExportDialog::vcodec_changed(int index) {
                             tr("Invalid Codec"),
                             tr("Failed to find a suitable encoder for this codec. Export will likely fail."));
     } else {
-      vcodec_params.pix_fmt = codec_info->pix_fmts[0];
+      if(codec_info->id == AV_CODEC_ID_RAWVIDEO) {
+          vcodec_params.pix_fmt = AV_PIX_FMT_YUV420P;
+      }else {
+        vcodec_params.pix_fmt = codec_info->pix_fmts[0];
+      }
       if (vcodec_params.pix_fmt == -1) {
         QMessageBox::critical(this,
                               tr("Invalid Codec"),
